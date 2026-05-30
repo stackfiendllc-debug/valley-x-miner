@@ -1,38 +1,30 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const walletBtn = document.getElementById("walletBtn");
-  const mineBtn = document.getElementById("mineBtn");
-  const balanceEl = document.getElementById("balance");
-  const statusEl = document.getElementById("status");
-  const walletStatus = document.getElementById("walletStatus");
-  const walletDisplay = document.getElementById("walletDisplay");
-  const pulse = document.getElementById("miningPulse");
+let balance = 0;
+let walletConnected = false;
+let miningInterval = null;
 
-  let connected = false;
-  let balance = 0;
-  let miningInterval = null;
+const connectBtn = document.getElementById("connectWallet");
+const mineBtn = document.getElementById("startMining");
+const balanceEl = document.getElementById("walletBalance");
+const statusEl = document.getElementById("walletStatus");
 
-  walletBtn.addEventListener("click", () => {
-    connected = true;
+connectBtn.addEventListener("click", () => {
+  walletConnected = true;
+  statusEl.textContent = "Wallet Connected";
+  connectBtn.textContent = "Connected";
+});
 
-    walletStatus.textContent = "Connected";
-    walletDisplay.textContent = "VLX...LIVE";
-    statusEl.textContent = "Wallet Connected";
-  });
+mineBtn.addEventListener("click", () => {
+  if (!walletConnected) {
+    alert("Connect Phantom Wallet first.");
+    return;
+  }
 
-  mineBtn.addEventListener("click", () => {
-    if (!connected) {
-      statusEl.textContent = "Connect wallet first";
-      return;
-    }
+  if (miningInterval) return;
 
-    if (miningInterval) return;
+  statusEl.textContent = "Mining Active";
 
-    statusEl.textContent = "Mining Active";
-    pulse.classList.add("active");
-
-    miningInterval = setInterval(() => {
-      balance += 0.00005;
-      balanceEl.textContent = balance.toFixed(8) + " VLX";
-    }, 5000);
-  });
+  miningInterval = setInterval(() => {
+    balance += 0.000000050;
+    balanceEl.textContent = balance.toFixed(9) + " VLX";
+  }, 30000);
 });

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valley X Miner</title>
+<link rel="stylesheet" href="style.css">
+
+<script type="module" src="phantom.js"></script>
+<script type="module" src="script.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <img src="logo.png" class="logo">
+
+    <h1>VALLEY X MINER</h1>
+
+    <button onclick="connectPhantomWallet()">Connect Phantom</button>
+    <button onclick="startMining()">Start Mining</button>
+
+    <div class="card" id="wallet">Wallet: Not Connected</div>
+    <div class="card" id="balance">Balance: 0.000000000 VLX</div>
+    <div class="card" id="rate">Rate: 0.000000050 / 30 sec</div>
+</div>
+
+</body>
+</html>

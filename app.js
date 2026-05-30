@@ -21,6 +21,7 @@ const db = getFirestore(app);
 
 let walletAddress = null;
 let balance = 0;
+let miningStarted = false;
 
 const connectBtn = document.getElementById("connectBtn");
 const mineBtn = document.getElementById("mineBtn");
@@ -28,9 +29,12 @@ const walletDisplay = document.getElementById("wallet");
 const balanceDisplay = document.getElementById("balance");
 
 connectBtn.addEventListener("click", async () => {
-  if ("solana" in window) {
+  const provider = window.phantom?.solana || window.solana;
+
+  if (provider?.isPhantom) {
     try {
-      const resp = await window.solana.connect();
+      const resp = await provider.connect();
+
       walletAddress = resp.publicKey.toString();
 
       walletDisplay.textContent =
@@ -40,7 +44,7 @@ connectBtn.addEventListener("click", async () => {
       const userSnap = await getDoc(userRef);
 
       if (userSnap.exists()) {
-        balance = userSnap.data().balance;
+        balance = userSnap.data().balance || 0;
       } else {
         await setDoc(userRef, {
           wallet: walletAddress,
@@ -49,11 +53,14 @@ connectBtn.addEventListener("click", async () => {
       }
 
       updateBalance();
+
     } catch (err) {
-      alert("Connection failed");
+      alert("Phantom connection failed");
+      console.error(err);
     }
   } else {
-    window.open("https://phantom.app/", "_blank");
+    window.location.href =
+      "https://phantom.app/ul/browse/https://stackfiendllc-debug.github.io/valley-x-miner/";
   }
 });
 
@@ -63,8 +70,11 @@ mineBtn.addEventListener("click", async () => {
     return;
   }
 
+  if (miningStarted) return;
+  miningStarted = true;
+
   setInterval(async () => {
-    balance += 0.00000005;
+    balance += 0.000000050;
 
     await updateDoc(doc(db, "miners", walletAddress), {
       balance: balance

@@ -10,7 +10,7 @@ let rewards = 0.000000050;
 let claimedBalance = 0;
 let miningInterval = null;
 
-// CONNECT PHANTOM
+// CONNECT WALLET
 connectBtn.addEventListener("click", async () => {
   if ("solana" in window) {
     const provider = window.solana;
@@ -23,14 +23,13 @@ connectBtn.addEventListener("click", async () => {
         walletEl.textContent =
           walletAddress.slice(0, 6) + "..." + walletAddress.slice(-4);
 
-        // Load saved claimed balance
         const saved = localStorage.getItem(walletAddress);
 
         if (saved) {
           claimedBalance = parseFloat(saved);
-          rewards = claimedBalance;
         }
 
+        rewards = 0.000000050;
         balanceEl.textContent = rewards.toFixed(9) + " VLX";
         statusEl.textContent = "Wallet Connected";
 
@@ -69,17 +68,31 @@ mineBtn.addEventListener("click", () => {
 });
 
 // CLAIM REWARDS
-function claimRewards() {
+async function claimRewards() {
   if (!walletAddress) {
     statusEl.textContent = "Connect wallet first";
     return;
   }
 
-  claimedBalance = rewards;
-  localStorage.setItem(walletAddress, claimedBalance);
+  try {
+    const provider = window.solana;
 
-  statusEl.textContent = "Rewards Claimed & Saved";
+    await provider.signMessage(
+      new TextEncoder().encode("Claim Valley X Rewards"),
+      "utf8"
+    );
+
+    claimedBalance += rewards;
+    localStorage.setItem(walletAddress, claimedBalance);
+
+    rewards = 0.000000050;
+    balanceEl.textContent = rewards.toFixed(9) + " VLX";
+
+    statusEl.textContent = "Rewards Claimed";
+
+  } catch (err) {
+    statusEl.textContent = "Claim Cancelled";
+  }
 }
 
-// Make claim button work
 window.claimRewards = claimRewards;

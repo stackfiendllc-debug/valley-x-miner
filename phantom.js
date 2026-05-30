@@ -8,26 +8,34 @@ const sdk = new BrowserSDK({
 
 window.connectPhantomWallet = async function () {
   try {
-    const { addresses } = await sdk.connect({
-      provider: "injected"
-    });
+    const result = await sdk.connect();
 
-    const wallet = addresses[0].address;
+    const wallet =
+      result.addresses?.[0]?.address ||
+      result.publicKey?.toString();
 
-    const walletEl = document.getElementById("wallet");
-    if (walletEl) {
-      walletEl.innerText =
-        wallet.slice(0, 6) + "..." + wallet.slice(-4);
+    if (!wallet) {
+      throw new Error("Wallet not found");
+    }
+
+    const walletDisplay = document.getElementById("wallet");
+
+    if (walletDisplay) {
+      walletDisplay.innerText =
+        "Wallet: " +
+        wallet.slice(0, 6) +
+        "..." +
+        wallet.slice(-4);
     }
 
     localStorage.setItem("vlxWallet", wallet);
-    window.walletAddress = wallet;
     window.walletConnected = true;
+    window.walletAddress = wallet;
 
     console.log("Connected:", wallet);
 
-  } catch (err) {
-    console.error("Phantom Error:", err);
+  } catch (error) {
+    console.error(error);
     alert("Phantom connection failed");
   }
 };

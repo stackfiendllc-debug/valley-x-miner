@@ -10,12 +10,7 @@
 
 <div class="app-container">
 
-    <img 
-      src="./logo.png" 
-      alt="VLX Logo" 
-      class="logo"
-      onerror="this.style.display='none'"
-    >
+    <img src="./logo.png" alt="VLX Logo" class="logo">
 
     <h1>VALLEY X MINER</h1>
     <p class="subtitle">Mine Valley X Token</p>
@@ -27,8 +22,27 @@
             <p id="balance">0.00 VLX</p>
         </div>
 
+        <div class="wallet-dashboard">
+            <div class="stat">
+                <span>Status</span>
+                <strong id="walletStatus">Disconnected</strong>
+            </div>
+
+            <div class="stat">
+                <span>Mining Rate</span>
+                <strong>0.25 VLX / 3s</strong>
+            </div>
+
+            <div class="stat">
+                <span>Wallet</span>
+                <strong id="walletDisplay">Not Connected</strong>
+            </div>
+        </div>
+
         <button id="walletBtn">Connect Phantom</button>
         <button id="mineBtn">Start Mining</button>
+
+        <div id="miningPulse"></div>
 
         <p id="status">Connect wallet to begin</p>
 
@@ -37,6 +51,5 @@
 </div>
 
 <script src="script.js"></script>
-
 </body>
 </html>

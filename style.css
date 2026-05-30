@@ -1,51 +1,87 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: #0a0a0a;
+  background: #000;
   color: white;
   text-align: center;
 }
 
-header {
+.hero {
   padding: 30px 20px;
-  background: #111;
 }
 
 .logo {
-  width: 120px;
-  margin-bottom: 15px;
+  width: 180px;
+  max-width: 80%;
+  margin-bottom: 20px;
+}
+
+h1 {
+  color: silver;
+  letter-spacing: 2px;
+}
+
+.subtitle {
+  color: #aaa;
 }
 
 .dashboard {
-  padding: 30px 20px;
+  display: flex;
+  justify-content: center;
+  padding: 20px;
 }
 
-.wallet-box {
-  background: #181818;
-  border: 2px solid #ff0000;
-  border-radius: 12px;
-  padding: 20px;
-  max-width: 400px;
-  margin: auto;
+.dashboard-card {
+  background: #111;
+  border: 2px solid silver;
+  border-radius: 18px;
+  padding: 30px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 0 25px rgba(255,255,255,0.08);
+}
+
+.stat {
+  margin: 20px 0;
+}
+
+label {
+  display: block;
+  color: #999;
+  margin-bottom: 8px;
+}
+
+span {
+  font-size: 18px;
+  color: white;
+}
+
+.button-wrap {
+  margin-top: 25px;
 }
 
 button {
-  background: #ff0000;
-  color: white;
-  border: none;
-  padding: 15px 25px;
+  width: 220px;
+  padding: 14px;
   margin: 10px;
-  border-radius: 8px;
-  cursor: pointer;
+  border: none;
+  border-radius: 12px;
   font-size: 16px;
+  cursor: pointer;
 }
 
-button:hover {
-  background: #cc0000;
+.connect-btn {
+  background: silver;
+  color: black;
+}
+
+.mine-btn {
+  background: #222;
+  color: silver;
+  border: 1px solid silver;
 }
 
 footer {
-  margin-top: 40px;
-  padding: 20px;
+  margin-top: 30px;
   color: #777;
 }

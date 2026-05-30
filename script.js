@@ -1,7 +1,6 @@
 let walletConnected = false;
 let mining = false;
 let balance = 0;
-let miningInterval = null;
 
 async function connectWallet() {
     if (window.solana && window.solana.isPhantom) {
@@ -29,7 +28,7 @@ function startMining() {
 
     mining = true;
 
-    miningInterval = setInterval(() => {
+    setInterval(() => {
         balance += 0.000000050;
         document.getElementById("balance").innerText =
             balance.toFixed(9) + " VLX";

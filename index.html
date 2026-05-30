@@ -1,64 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Valley X Miner</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
 <div class="app-container">
 
-    <img 
-      src="./logo.png" 
-      alt="VLX Logo" 
-      class="logo"
-      onerror="this.style.display='none'"
-    >
+  <img
+    src="./logo.png"
+    alt="VLX Logo"
+    class="logo"
+    onerror="this.style.display='none'"
+  >
 
-    <h1>VALLEY X MINER</h1>
-    <p class="subtitle">Mine Valley X Token</p>
+  <h1>VALLEY X MINER</h1>
+  <p class="subtitle">Mine Valley X Token</p>
 
-    <div class="dashboard">
+  <div class="dashboard">
 
-        <div class="balance-box">
-            <h2>VLX Earned</h2>
-            <p id="balance">0.00 VLX</p>
-        </div>
+    <div class="balance-box">
+      <h2>VLX Earned</h2>
+      <p id="balance">0.00000000 VLX</p>
+    </div>
 
-        <div class="wallet-dashboard">
+    <div class="wallet-dashboard">
 
-            <div class="stat">
-                <span>Status</span>
-                <strong id="walletStatus">Disconnected</strong>
-            </div>
+      <div class="stat">
+        <span>Status</span>
+        <strong id="walletStatus">Disconnected</strong>
+      </div>
 
-            <div class="stat">
-                <span>Mining Rate</span>
-                <strong>0.25 VLX / 3s</strong>
-            </div>
+      <div class="stat">
+        <span>Mining Rate</span>
+        <strong>0.00005 VLX / 5s</strong>
+      </div>
 
-            <div class="stat">
-                <span>Wallet</span>
-                <strong id="walletDisplay">Not Connected</strong>
-            </div>
-
-        </div>
-
-        <button id="walletBtn">Connect Phantom</button>
-        <button id="mineBtn">Start Mining</button>
-
-        <div id="miningPulse"></div>
-
-        <p id="status">Connect wallet to begin</p>
+      <div class="stat">
+        <span>Wallet</span>
+        <strong id="walletDisplay">Not Connected</strong>
+      </div>
 
     </div>
 
+    <button id="walletBtn">Connect Phantom</button>
+    <button id="mineBtn">Start Mining</button>
+
+    <div id="miningPulse"></div>
+
+    <p id="status">Connect wallet to begin</p>
+
+  </div>
+
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="script.js"></script>
-
+<script src="script.js?v=15"></script>
 </body>
 </html>

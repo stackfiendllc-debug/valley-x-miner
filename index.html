@@ -7,59 +7,22 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <div class="container">
+    <img src="logo.jpeg" class="logo" alt="VLX Logo" />
 
-<div class="container">
-    <img src="logo.png" alt="VLX Logo" class="logo">
+    <h1>Valley X Miner</h1>
+    <p>Mine VLX Tokens</p>
 
-    <h1>VALLEY X MINER</h1>
-    <p class="subtitle">Mine VLX directly from your browser</p>
-
-    <button id="connectWallet">Open / Connect Phantom</button>
-
-    <div class="wallet-display" id="walletAddress">
-        Wallet Not Connected
+    <div class="stats">
+      <h2 id="balance">0 VLX</h2>
     </div>
 
-    <div class="dashboard">
-        <div class="card">
-            <h3>Wallet Balance</h3>
-            <p id="balance">0 VLX</p>
-        </div>
+    <button id="mineBtn">Start Mining</button>
+    <button id="walletBtn">Open / Connect Phantom</button>
 
-        <div class="card">
-            <h3>Mining Rate</h3>
-            <p>5 VLX/sec</p>
-        </div>
+    <p id="status">Ready to mine</p>
+  </div>
 
-        <div class="card">
-            <h3>Hash Power</h3>
-            <p id="hashPower">0 H/s</p>
-        </div>
-
-        <div class="card">
-            <h3>Earned Today</h3>
-            <p id="earned">0 VLX</p>
-        </div>
-    </div>
-
-    <button id="mineButton">START MINING</button>
-
-    <div class="leaderboard">
-        <h2>Top Miners</h2>
-        <ul>
-            <li>MinerX — 1200 VLX</li>
-            <li>CryptoFalcon — 980 VLX</li>
-            <li>VLXKing — 750 VLX</li>
-        </ul>
-    </div>
-
-    <div class="referral">
-        Invite friends & earn <strong>25 VLX</strong>
-    </div>
-</div>
-
-<script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js"></script>
-<script src="script.js"></script>
-
+  <script src="script.js"></script>
 </body>
 </html>

@@ -1,142 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Valley X Miner</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Valley X Miner</title>
 
-<style>
-body{
-    margin:0;
-    font-family:Arial,sans-serif;
-    background:#000;
-    color:white;
-    text-align:center;
-}
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #000;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
 
-.container{
-    max-width:420px;
-    margin:40px auto;
-    padding:20px;
-    background:#111;
-    border:2px solid #ff6a00;
-    border-radius:20px;
-    box-shadow:0 0 25px rgba(255,106,0,0.45);
-}
+    .container {
+      padding: 40px 20px;
+    }
 
-.logo{
-    width:170px;
-    border-radius:50%;
-    margin-bottom:20px;
-    animation:glow 2s infinite alternate;
-}
+    h1 {
+      color: red;
+      font-size: 2.5rem;
+    }
 
-@keyframes glow{
-    from{box-shadow:0 0 10px #ff6a00;}
-    to{box-shadow:0 0 35px #ffb300;}
-}
+    button {
+      background: red;
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      font-size: 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
 
-button{
-    width:100%;
-    padding:15px;
-    margin:10px 0;
-    border:none;
-    border-radius:12px;
-    background:linear-gradient(90deg,#ff6a00,#ffb300);
-    color:black;
-    font-weight:bold;
-    font-size:16px;
-    cursor:pointer;
-}
+    #wallet {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #00ff88;
+    }
 
-.stat{
-    background:#1b1b1b;
-    padding:15px;
-    border-radius:12px;
-    margin:12px 0;
-}
-
-.value{
-    color:#ffb300;
-}
-</style>
+    #status {
+      margin-top: 15px;
+      color: #aaa;
+    }
+  </style>
 </head>
 <body>
 
-<div class="container">
-    <img src="logo.png" class="logo">
-
+  <div class="container">
     <h1>VALLEY X MINER</h1>
 
-    <button onclick="connectWallet()">Connect Phantom</button>
-    <button onclick="startMining()">Start Mining</button>
-    <button onclick="claimVLX()">Claim VLX</button>
+    <button onclick="connectPhantomWallet()">
+      Connect Phantom
+    </button>
 
-    <div class="stat">
-        Wallet: <span id="wallet">Not Connected</span>
-    </div>
+    <div id="wallet">Not Connected</div>
+    <div id="status">Ready to Mine</div>
+  </div>
 
-    <div class="stat">
-        Balance: <span class="value" id="balance">0.000000000 VLX</span>
-    </div>
+  <!-- Phantom Browser SDK -->
+  <script type="module" src="phantom.js"></script>
 
-    <div class="stat">
-        Rate: <span class="value">0.000000050 / 30 sec</span>
-    </div>
-</div>
+  <!-- Firebase -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-analytics.js";
+    import { getFirestore } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
-import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+    const firebaseConfig = {
+      apiKey: "AIzaSyDCJC-9qG1klPuVgVgypwTPmXrNGjmoFJ8",
+      authDomain: "valley-x-miner.firebaseapp.com",
+      projectId: "valley-x-miner",
+      storageBucket: "valley-x-miner.firebasestorage.app",
+      messagingSenderId: "564050490743",
+      appId: "1:564050490743:web:421b8f7c42d50ed4d15d72",
+      measurementId: "G-5VWEVH3MEE"
+    };
 
-const firebaseConfig = {
-  apiKey: "AIzaSyDCJC-9qG1klPuVgVgypwTPmXrNGjmoFJ8",
-  authDomain: "valley-x-miner.firebaseapp.com",
-  projectId: "valley-x-miner",
-  storageBucket: "valley-x-miner.firebasestorage.app",
-  messagingSenderId: "564050490743",
-  appId: "1:564050490743:web:421b8f7c42d50ed4d15d72",
-  measurementId: "G-5VWEVH3MEE"
-};
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+    window.db = db;
 
-window.submitClaim = async function(wallet, amount){
-    await addDoc(collection(db,"claims"),{
-        wallet,
-        amount,
-        timestamp:new Date().toISOString(),
-        status:"pending"
-    });
+    console.log("Firebase Connected");
+  </script>
 
-    alert("Claim submitted for review.");
-}
-</script>
-
-<script src="script.js"></script>
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-analytics.js";
-import { getFirestore } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyDCJC-9qG1klPuVgVgypwTPmXrNGjmoFJ8",
-  authDomain: "valley-x-miner.firebaseapp.com",
-  projectId: "valley-x-miner",
-  storageBucket: "valley-x-miner.firebasestorage.app",
-  messagingSenderId: "564050490743",
-  appId: "1:564050490743:web:421b8f7c42d50ed4d15d72",
-  measurementId: "G-5VWEVH3MEE"
-};
-
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-const db = getFirestore(app);
-
-window.db = db;
-
-console.log("Valley X Firebase Connected");
-</script>
 </body>
 </html>

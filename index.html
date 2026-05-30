@@ -1,205 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Valley X Miner</title>
-
-<style>
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #000;
-  color: #fff;
-  text-align: center;
-}
-
-.container {
-  padding: 20px;
-}
-
-.logo {
-  width: 140px;
-  margin-top: 20px;
-}
-
-h1 {
-  color: #ff0000;
-}
-
-.balance-box {
-  margin: 20px auto;
-  padding: 20px;
-  width: 90%;
-  max-width: 400px;
-  border: 2px solid #ff0000;
-  border-radius: 12px;
-  background: #111;
-}
-
-button {
-  background: #ff0000;
-  color: white;
-  border: none;
-  padding: 14px 24px;
-  margin: 10px;
-  border-radius: 8px;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-button:hover {
-  opacity: 0.9;
-}
-
-#walletAddress {
-  font-size: 12px;
-  word-wrap: break-word;
-  margin-top: 10px;
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Valley X Miner</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
 
 <div class="container">
-<img src="logo.jpeg" class="logo">
+  <img src="logo.png" class="logo" alt="Valley X Logo" />
 
-<h1>Valley X Miner</h1>
+  <h1>VALLEY X MINER</h1>
 
-<button onclick="connectWallet()">Connect Phantom</button>
+  <div class="button-group">
+    <button id="connectBtn">Connect Wallet</button>
+    <button id="mineBtn">Start Mining</button>
+    <button id="claimBtn" onclick="claimRewards()">Claim Rewards</button>
+  </div>
 
-<div id="walletAddress">Wallet not connected</div>
+  <div class="card">
+    <strong>Wallet:</strong>
+    <span id="wallet">Not Connected</span>
+  </div>
 
-<div class="balance-box">
-<h2>Mined VLX</h2>
-<h1 id="balance">0.000000</h1>
+  <div class="card">
+    <strong>Rewards:</strong>
+    <span id="balance">0.000000050 VLX</span>
+  </div>
+
+  <div class="card">
+    <strong>Claimed Total:</strong>
+    <span id="claimed">0.000000000 VLX</span>
+  </div>
+
+  <div class="card">
+    <strong>Status:</strong>
+    <span id="status">Ready</span>
+  </div>
+
 </div>
 
-<button onclick="startMining()">Start Mining</button>
-<button onclick="stopMining()">Stop Mining</button>
-<button id="claimBtn" onclick="claimRewards()">Claim Rewards</button>
-
-</div>
-
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js"></script>
-
-<script>
-let walletAddress = null;
-let minedBalance = 0;
-let miningInterval = null;
-
-function updateBalance() {
-  document.getElementById("balance").innerText =
-    minedBalance.toFixed(6);
-}
-
-async function connectWallet() {
-  if ("solana" in window) {
-    const provider = window.solana;
-
-    if (provider.isPhantom) {
-      try {
-        const response = await provider.connect();
-        walletAddress = response.publicKey.toString();
-
-        document.getElementById("walletAddress").innerText =
-          walletAddress;
-
-      } catch (err) {
-        alert("Wallet connection failed.");
-      }
-    }
-  } else {
-    alert("Phantom Wallet not found.");
-  }
-}
-
-function startMining() {
-  if (!walletAddress) {
-    alert("Connect wallet first");
-    return;
-  }
-
-  if (!miningInterval) {
-    miningInterval = setInterval(() => {
-      minedBalance += 0.001;
-      updateBalance();
-    }, 1000);
-  }
-}
-
-function stopMining() {
-  clearInterval(miningInterval);
-  miningInterval = null;
-}
-
-async function claimRewards() {
-  if (!walletAddress) {
-    alert("Connect Phantom first");
-    return;
-  }
-
-  if (minedBalance <= 0) {
-    alert("No rewards to claim");
-    return;
-  }
-
-  try {
-    const provider = window.solana;
-
-    const connection = new solanaWeb3.Connection(
-      "https://api.mainnet-beta.solana.com",
-      "confirmed"
-    );
-
-    const transaction = new solanaWeb3.Transaction();
-
-    const memoInstruction = new solanaWeb3.TransactionInstruction({
-      keys: [],
-      programId: new solanaWeb3.PublicKey(
-        "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr"
-      ),
-      data: new TextEncoder().encode(
-        `VLX Claim | ${walletAddress} | ${minedBalance.toFixed(6)}`
-      )
-    });
-
-    transaction.add(memoInstruction);
-
-    transaction.feePayer = provider.publicKey;
-
-    const { blockhash } =
-      await connection.getLatestBlockhash();
-
-    transaction.recentBlockhash = blockhash;
-
-    const signedTransaction =
-      await provider.signTransaction(transaction);
-
-    const signature =
-      await connection.sendRawTransaction(
-        signedTransaction.serialize()
-      );
-
-    await connection.confirmTransaction(signature);
-
-    minedBalance = 0;
-    updateBalance();
-
-    alert("Claim Successful!");
-
-    window.open(
-      `https://solscan.io/tx/${signature}`,
-      "_blank"
-    );
-
-  } catch (error) {
-    console.error(error);
-    alert("Claim failed or cancelled.");
-  }
-}
-</script>
+<script src="app.js?v=6"></script>
 
 </body>
 </html>

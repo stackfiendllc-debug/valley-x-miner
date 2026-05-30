@@ -3,70 +3,38 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Valley X Miner</title>
+  <title>Valley X Miner V3</title>
 
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background: #000;
-      color: #fff;
-      font-family: Arial, sans-serif;
-      text-align: center;
-    }
+  <!-- Keep your existing styles exactly the same -->
+  <link rel="stylesheet" href="style.css" />
 
-    .container {
-      padding: 40px 20px;
-    }
-
-    h1 {
-      color: red;
-      font-size: 2.5rem;
-    }
-
-    button {
-      background: red;
-      color: white;
-      border: none;
-      padding: 15px 30px;
-      font-size: 18px;
-      border-radius: 10px;
-      cursor: pointer;
-      margin-top: 20px;
-    }
-
-    #wallet {
-      margin-top: 20px;
-      font-size: 18px;
-      color: #00ff88;
-    }
-
-    #status {
-      margin-top: 15px;
-      color: #aaa;
-    }
-  </style>
+  <!-- Phantom Wallet -->
+  <script type="module" src="phantom.js"></script>
 </head>
 <body>
 
+  <!-- KEEP ALL YOUR EXISTING PAGE CONTENT EXACTLY AS IT WAS -->
+
   <div class="container">
-    <h1>VALLEY X MINER</h1>
+
+    <!-- Existing logo / miner UI stays untouched -->
 
     <button onclick="connectPhantomWallet()">
       Connect Phantom
     </button>
 
     <div id="wallet">Not Connected</div>
-    <div id="status">Ready to Mine</div>
+
+    <!-- Keep all your mining buttons, counters, stats, etc -->
+    
   </div>
 
-  <!-- Phantom Browser SDK -->
-  <script type="module" src="phantom.js"></script>
+  <!-- Your existing script -->
+  <script src="script.js"></script>
 
-  <!-- Firebase -->
+  <!-- Firebase backend -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-analytics.js";
     import { getFirestore } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -75,14 +43,11 @@
       projectId: "valley-x-miner",
       storageBucket: "valley-x-miner.firebasestorage.app",
       messagingSenderId: "564050490743",
-      appId: "1:564050490743:web:421b8f7c42d50ed4d15d72",
-      measurementId: "G-5VWEVH3MEE"
+      appId: "1:564050490743:web:421b8f7c42d50ed4d15d72"
     };
 
     const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    window.db = db;
+    window.db = getFirestore(app);
 
     console.log("Firebase Connected");
   </script>

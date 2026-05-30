@@ -1,60 +1,94 @@
-body {
+* {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background: #0a0a0a;
-  color: white;
-  text-align: center;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.container {
+body {
+  background: #000;
+  font-family: Arial, sans-serif;
+  color: #fff;
+  text-align: center;
+  min-height: 100vh;
+  background-image:
+    radial-gradient(circle at center, rgba(255,170,50,0.08), transparent 60%);
+}
+
+.app-container {
   padding: 30px 20px;
-  max-width: 500px;
-  margin: auto;
 }
 
 .logo {
-  width: 180px;
-  max-width: 80%;
-  height: auto;
+  width: 240px;
+  max-width: 85%;
   display: block;
-  margin: 20px auto;
+  margin: 0 auto 20px;
+  filter: drop-shadow(0 0 18px rgba(255,170,50,0.35));
 }
 
 h1 {
-  color: #ff0000;
+  font-size: 2.4rem;
+  color: #d9d9d9;
+  letter-spacing: 2px;
+  text-shadow: 0 0 12px rgba(255,255,255,0.15);
+}
+
+.subtitle {
+  color: #c89b3c;
+  margin: 12px 0 30px;
+  font-size: 1rem;
+}
+
+.dashboard {
+  background: rgba(18,18,18,0.96);
+  border: 1px solid #7a5a22;
+  border-radius: 22px;
+  padding: 30px;
+  max-width: 420px;
+  margin: auto;
+  box-shadow:
+    0 0 30px rgba(255,170,50,0.12),
+    inset 0 0 18px rgba(255,255,255,0.04);
+}
+
+.balance-box {
   margin-bottom: 25px;
 }
 
-.card {
-  background: #141414;
-  padding: 25px;
-  border-radius: 16px;
-  border: 2px solid #ff0000;
-  box-shadow: 0 0 20px rgba(255,0,0,0.25);
+.balance-box h2 {
+  color: #bfbfbf;
+  margin-bottom: 10px;
+}
+
+#balance {
+  font-size: 2.2rem;
+  font-weight: bold;
+  color: #ffb84d;
+  text-shadow: 0 0 14px rgba(255,184,77,0.35);
 }
 
 button {
   width: 100%;
-  padding: 14px;
-  margin-top: 12px;
+  padding: 15px;
+  margin: 10px 0;
   border: none;
-  border-radius: 10px;
+  border-radius: 14px;
   font-size: 16px;
   cursor: pointer;
-  background: #ff0000;
-  color: white;
   font-weight: bold;
+  background: linear-gradient(145deg, #1e1e1e, #2b2b2b);
+  color: #ffb84d;
+  border: 1px solid #7a5a22;
+  transition: 0.25s ease;
 }
 
 button:hover {
-  opacity: 0.9;
-}
-
-#balance {
-  font-size: 2rem;
+  transform: scale(1.02);
+  box-shadow: 0 0 16px rgba(255,184,77,0.25);
 }
 
 #status {
-  margin: 12px 0;
-  color: #bbb;
+  margin-top: 18px;
+  color: #aaa;
+  font-size: 14px;
 }

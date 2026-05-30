@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Valley X Miner</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="hero">
+  <img src="logo.png" alt="Valley X Logo" class="logo">
+
+  <h1>VALLEY X MINER</h1>
+  <p class="subtitle">Official VLX Mining Dashboard</p>
+</header>
+
+<main class="dashboard">
+
+  <div class="dashboard-card">
+    <h2>Mining Console</h2>
+
+    <div class="stats">
+      <div class="stat">
+        <label>Status</label>
+        <span id="walletStatus">Disconnected</span>
+      </div>
+
+      <div class="stat">
+        <label>Balance</label>
+        <span id="walletBalance">0.000000000 VLX</span>
+      </div>
+
+      <div class="stat">
+        <label>Mining Rate</label>
+        <span>0.000000050 VLX / 30s</span>
+      </div>
+    </div>
+
+    <div class="button-wrap">
+      <button id="connectWallet" class="connect-btn">
+        Connect Phantom
+      </button>
+
+      <button id="startMining" class="mine-btn">
+        Start Mining
+      </button>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  © 2026 Valley X Token | Secure Protocol
+</footer>
+
+<script src="script.js"></script>
+
+</body>
+</html>

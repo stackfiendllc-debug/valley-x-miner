@@ -9,13 +9,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let connected = false;
   let balance = 0;
-  let miningInterval;
+  let miningInterval = null;
 
   walletBtn.addEventListener("click", () => {
     connected = true;
 
     walletStatus.textContent = "Connected";
-    walletDisplay.textContent = "VLX...MINER";
+    walletDisplay.textContent = "VLX...LIVE";
     statusEl.textContent = "Wallet Connected";
   });
 
@@ -31,8 +31,8 @@ document.addEventListener("DOMContentLoaded", () => {
     pulse.classList.add("active");
 
     miningInterval = setInterval(() => {
-      balance += 0.0008;   // much lower mining rate
-      balanceEl.textContent = balance.toFixed(6) + " VLX";
-    }, 5000); // every 5 seconds
+      balance += 0.00005;   // ultra slow realistic rate
+      balanceEl.textContent = balance.toFixed(8) + " VLX";
+    }, 5000);
   });
 });

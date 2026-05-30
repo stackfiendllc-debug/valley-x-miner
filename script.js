@@ -9,28 +9,26 @@ const walletDisplay = document.getElementById("walletAddress");
 document.getElementById("earned").innerText = earned + " VLX";
 document.getElementById("balance").innerText = earned + " VLX";
 
-connectBtn.addEventListener("click", async () => {
-    if ("solana" in window) {
-        const provider = window.solana;
+connectBtn.addEventListener("click", connectWallet);
 
-        if (provider.isPhantom) {
-            try {
-                const response = await provider.connect();
+async function connectWallet() {
+    if (window.solana && window.solana.isPhantom) {
+        try {
+            const response = await window.solana.connect();
 
-                const wallet = response.publicKey.toString();
+            const wallet = response.publicKey.toString();
 
-                connectBtn.innerText = "CONNECTED";
-                walletDisplay.innerText =
-                    wallet.slice(0, 6) + "..." + wallet.slice(-4);
+            connectBtn.innerText = "CONNECTED";
+            walletDisplay.innerText =
+                wallet.slice(0, 6) + "..." + wallet.slice(-4);
 
-            } catch (err) {
-                console.log(err);
-            }
+        } catch (err) {
+            walletDisplay.innerText = "Connection failed";
         }
     } else {
-        window.open("https://phantom.app/", "_blank");
+        window.location.href = "https://phantom.app/download";
     }
-});
+}
 
 mineBtn.addEventListener("click", () => {
     mining = !mining;

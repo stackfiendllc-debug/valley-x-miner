@@ -1,8 +1,7 @@
-let balance = localStorage.getItem("vlxBalance")
-  ? parseFloat(localStorage.getItem("vlxBalance"))
-  : 0;
-
-let mining = localStorage.getItem("vlxMining") === "true";
+let balance = 0;
+let mining = false;
+let walletConnected = false;
+let walletAddress = "";
 
 const balanceEl = document.getElementById("balance");
 const mineBtn = document.getElementById("mineBtn");
@@ -11,19 +10,29 @@ const statusEl = document.getElementById("status");
 
 function updateBalance() {
   balanceEl.textContent = balance.toFixed(2) + " VLX";
-  localStorage.setItem("vlxBalance", balance);
+}
+
+function getWalletKey(address) {
+  return "vlx_" + address;
 }
 
 function mine() {
-  if (mining) {
+  if (mining && walletConnected) {
     balance += 0.25;
+
+    localStorage.setItem(getWalletKey(walletAddress), balance);
+
     updateBalance();
   }
 }
 
 mineBtn.addEventListener("click", () => {
+  if (!walletConnected) {
+    statusEl.textContent = "Connect wallet first";
+    return;
+  }
+
   mining = !mining;
-  localStorage.setItem("vlxMining", mining);
 
   if (mining) {
     mineBtn.textContent = "Stop Mining";
@@ -37,8 +46,21 @@ mineBtn.addEventListener("click", () => {
 walletBtn.addEventListener("click", async () => {
   if (window.solana && window.solana.isPhantom) {
     try {
-      await window.solana.connect();
-      statusEl.textContent = "Phantom Connected";
+      const response = await window.solana.connect();
+
+      walletAddress = response.publicKey.toString();
+      walletConnected = true;
+
+      balance = parseFloat(
+        localStorage.getItem(getWalletKey(walletAddress))
+      ) || 0;
+
+      walletBtn.textContent = "Connected";
+      statusEl.textContent =
+        walletAddress.slice(0, 6) + "..." + walletAddress.slice(-4);
+
+      updateBalance();
+
     } catch (err) {
       statusEl.textContent = "Connection failed";
     }
@@ -50,10 +72,6 @@ walletBtn.addEventListener("click", async () => {
   }
 });
 
-if (mining) {
-  mineBtn.textContent = "Stop Mining";
-  statusEl.textContent = "Mining active...";
-}
-
 updateBalance();
+
 setInterval(mine, 3000);

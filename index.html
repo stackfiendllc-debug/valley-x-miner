@@ -10,7 +10,12 @@
 
 <div class="app-container">
 
-    <img src="./logo.png" alt="VLX Logo" class="logo">
+    <img 
+      src="./logo.png" 
+      alt="VLX Logo" 
+      class="logo"
+      onerror="this.style.display='none'"
+    >
 
     <h1>VALLEY X MINER</h1>
     <p class="subtitle">Mine Valley X Token</p>
@@ -23,6 +28,7 @@
         </div>
 
         <div class="wallet-dashboard">
+
             <div class="stat">
                 <span>Status</span>
                 <strong id="walletStatus">Disconnected</strong>
@@ -37,6 +43,7 @@
                 <span>Wallet</span>
                 <strong id="walletDisplay">Not Connected</strong>
             </div>
+
         </div>
 
         <button id="walletBtn">Connect Phantom</button>
@@ -50,6 +57,8 @@
 
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="script.js"></script>
+
 </body>
 </html>

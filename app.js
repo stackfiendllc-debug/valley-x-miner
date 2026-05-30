@@ -1,15 +1,20 @@
 const SUPABASE_URL = "https://vjalivzqoiqnuadbkrce.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZqYWxpdnpxb2lxbnVhZGJrcmNlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAxMTI5NDMsImV4cCI6MjA5NTY4ODk0M30.nIh-u0GHpQkBPQWLN7UKETagAJOoaIbVml3TCtEJpoE";
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const supabase = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
 
 let walletAddress = null;
 let miningInterval = null;
+let isMining = false;
 const miningRate = 0.000000050;
 
 const connectBtn = document.getElementById("connectBtn");
 const mineBtn = document.getElementById("mineBtn");
 const claimBtn = document.getElementById("claimBtn");
+
 const walletEl = document.getElementById("wallet");
 const balanceEl = document.getElementById("balance");
 const statusEl = document.getElementById("status");
@@ -18,22 +23,27 @@ connectBtn.onclick = connectWallet;
 mineBtn.onclick = toggleMining;
 claimBtn.onclick = claimRewards;
 
-let isMining = false;
-
 async function connectWallet() {
   try {
-    const provider = window.phantom?.solana;
+    const provider = window.phantom?.solana || window.solana;
 
-    if (!provider?.isPhantom) {
-      window.open("https://phantom.app/", "_blank");
+    if (!provider || !provider.isPhantom) {
+      statusEl.textContent = "Open in Phantom Browser";
+      window.location.href =
+        "https://phantom.app/ul/browse/https://stackfiendllc-debug.github.io/valley-x-miner/";
       return;
     }
 
-    const response = await provider.connect();
+    const response = await provider.connect({
+      onlyIfTrusted: false
+    });
+
     walletAddress = response.publicKey.toString();
 
     walletEl.textContent =
-      walletAddress.slice(0, 6) + "..." + walletAddress.slice(-4);
+      walletAddress.slice(0, 6) +
+      "..." +
+      walletAddress.slice(-4);
 
     statusEl.textContent = "Connected";
 
@@ -93,7 +103,8 @@ function beginMiningLoop() {
       .eq("wallet", walletAddress)
       .single();
 
-    const updated = Number(data.rewards) + miningRate;
+    const updated =
+      Number(data.rewards) + miningRate;
 
     await supabase
       .from("miners")

@@ -8,55 +8,31 @@
 </head>
 <body>
 
-<div class="app-container">
+  <header>
+    <h1>VALLEY X MINER</h1>
+    <p>Official VLX Mining Dashboard</p>
+  </header>
 
-  <img
-    src="./logo.png"
-    alt="VLX Logo"
-    class="logo"
-    onerror="this.style.display='none'"
-  >
+  <section class="dashboard">
+    <h2>Mining Dashboard</h2>
 
-  <h1>VALLEY X MINER</h1>
-  <p class="subtitle">Mine Valley X Token</p>
-
-  <div class="dashboard">
-
-    <div class="balance-box">
-      <h2>VLX Earned</h2>
-      <p id="balance">0.00000000 VLX</p>
+    <div class="wallet-box">
+      <p>Status: <span id="walletStatus">Disconnected</span></p>
+      <p>Balance: <span id="walletBalance">0.000000000 VLX</span></p>
+      <p>Mining Rate: <strong>0.000000050 VLX / 30s</strong></p>
     </div>
 
-    <div class="wallet-dashboard">
-
-      <div class="stat">
-        <span>Status</span>
-        <strong id="walletStatus">Disconnected</strong>
-      </div>
-
-      <div class="stat">
-        <span>Mining Rate</span>
-        <strong>0.00005 VLX / 5s</strong>
-      </div>
-
-      <div class="stat">
-        <span>Wallet</span>
-        <strong id="walletDisplay">Not Connected</strong>
-      </div>
-
+    <div class="button-group">
+      <button id="connectWallet">Connect Phantom</button>
+      <button id="startMining">Start Mining</button>
     </div>
+  </section>
 
-    <button id="walletBtn">Connect Phantom</button>
-    <button id="mineBtn">Start Mining</button>
+  <footer>
+    <p>© 2026 Valley X Token | Secure Mining Protocol</p>
+  </footer>
 
-    <div id="miningPulse"></div>
+  <script src="script.js"></script>
 
-    <p id="status">Connect wallet to begin</p>
-
-  </div>
-
-</div>
-
-<script src="script.js?v=15"></script>
 </body>
 </html>

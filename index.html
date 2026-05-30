@@ -115,6 +115,28 @@ window.submitClaim = async function(wallet, amount){
 </script>
 
 <script src="script.js"></script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-analytics.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
 
+const firebaseConfig = {
+  apiKey: "AIzaSyDCJC-9qG1klPuVgVgypwTPmXrNGjmoFJ8",
+  authDomain: "valley-x-miner.firebaseapp.com",
+  projectId: "valley-x-miner",
+  storageBucket: "valley-x-miner.firebasestorage.app",
+  messagingSenderId: "564050490743",
+  appId: "1:564050490743:web:421b8f7c42d50ed4d15d72",
+  measurementId: "G-5VWEVH3MEE"
+};
+
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+const db = getFirestore(app);
+
+window.db = db;
+
+console.log("Valley X Firebase Connected");
+</script>
 </body>
 </html>

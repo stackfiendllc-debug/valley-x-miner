@@ -1,57 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Valley X Miner</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <div class="container">
+  <header>
+    <img src="logo.jpeg" alt="Valley X Logo" class="logo">
+    <h1>VALLEY X MINER</h1>
+    <p>Official VLX Mining Dashboard</p>
+  </header>
 
-    <header class="hero">
-      <img src="logo.jpeg" alt="Valley X Logo" class="logo">
-      <h1>VALLEY X MINER</h1>
-      <p>The Official VLX Mining Dashboard</p>
-    </header>
+  <main class="dashboard">
+    <h2>Mining Dashboard</h2>
 
-    <section class="dashboard">
+    <div class="wallet-box">
+      <p>Status: <span id="walletStatus">Disconnected</span></p>
+      <p>Balance: <span id="walletBalance">0.000000000 VLX</span></p>
+      <p>Mining Rate: <strong>0.000000050 VLX / 30s</strong></p>
+    </div>
 
-      <div class="dashboard-header">
-        <h2>Mining Console</h2>
-        <span class="live-indicator">● LIVE</span>
-      </div>
+    <button id="connectWallet">Connect Phantom</button>
+    <button id="startMining">Start Mining</button>
+  </main>
 
-      <div class="wallet-box">
-        <div class="stat-card">
-          <label>Status</label>
-          <span id="walletStatus">Disconnected</span>
-        </div>
-
-        <div class="stat-card">
-          <label>Balance</label>
-          <span id="walletBalance">0.000000000 VLX</span>
-        </div>
-
-        <div class="stat-card">
-          <label>Mining Rate</label>
-          <span>0.000000050 / 30s</span>
-        </div>
-      </div>
-
-      <div class="button-group">
-        <button id="connectWallet">Connect Phantom</button>
-        <button id="startMining">Start Mining</button>
-      </div>
-
-    </section>
-
-    <footer>
-      © 2026 Valley X Token | Blockchain Mining Protocol
-    </footer>
-
-  </div>
+  <footer>
+    © 2026 Valley X Token
+  </footer>
 
   <script src="script.js"></script>
 

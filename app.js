@@ -19,7 +19,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-let walletAddress = null;
+let walletAddress = localStorage.getItem("vlxWallet");
 let balance = 0;
 let miningStarted = false;
 
@@ -28,35 +28,24 @@ const mineBtn = document.getElementById("mineBtn");
 const walletDisplay = document.getElementById("wallet");
 const balanceDisplay = document.getElementById("balance");
 
+if (walletAddress) {
+  loadWalletData();
+}
+
 connectBtn.addEventListener("click", async () => {
   const provider = window.phantom?.solana || window.solana;
 
   if (provider?.isPhantom) {
     try {
       const resp = await provider.connect();
-
       walletAddress = resp.publicKey.toString();
 
-      walletDisplay.textContent =
-        walletAddress.slice(0, 6) + "..." + walletAddress.slice(-4);
+      localStorage.setItem("vlxWallet", walletAddress);
 
-      const userRef = doc(db, "miners", walletAddress);
-      const userSnap = await getDoc(userRef);
-
-      if (userSnap.exists()) {
-        balance = userSnap.data().balance || 0;
-      } else {
-        await setDoc(userRef, {
-          wallet: walletAddress,
-          balance: 0
-        });
-      }
-
-      updateBalance();
+      await loadWalletData();
 
     } catch (err) {
       alert("Phantom connection failed");
-      console.error(err);
     }
   } else {
     window.location.href =
@@ -83,6 +72,25 @@ mineBtn.addEventListener("click", async () => {
     updateBalance();
   }, 30000);
 });
+
+async function loadWalletData() {
+  walletDisplay.textContent =
+    walletAddress.slice(0, 6) + "..." + walletAddress.slice(-4);
+
+  const userRef = doc(db, "miners", walletAddress);
+  const userSnap = await getDoc(userRef);
+
+  if (userSnap.exists()) {
+    balance = userSnap.data().balance || 0;
+  } else {
+    await setDoc(userRef, {
+      wallet: walletAddress,
+      balance: 0
+    });
+  }
+
+  updateBalance();
+}
 
 function updateBalance() {
   balanceDisplay.textContent = balance.toFixed(9) + " VLX";

@@ -1,57 +1,61 @@
-const SUPABASE_URL = "https://vjalivzqoiqnuadbkrce.supabase.co";
-const SUPABASE_KEY = "YOUR_SUPABASE_ANON_KEY";
-
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const connectBtn = document.getElementById("connectBtn");
+const mineBtn = document.getElementById("mineBtn");
+const walletEl = document.getElementById("wallet");
+const balanceEl = document.getElementById("balance");
+const statusEl = document.getElementById("status");
 
 let walletAddress = null;
 let mining = false;
-let miningInterval;
-let balance = 0;
+let rewards = 0.000000050;
+let miningInterval = null;
 
-const connectBtn = document.getElementById("connectBtn");
-const mineBtn = document.getElementById("mineBtn");
-const walletDisplay = document.getElementById("wallet");
-const balanceDisplay = document.getElementById("balance");
-const statusDisplay = document.getElementById("status");
+// CONNECT PHANTOM
+connectBtn.addEventListener("click", async () => {
+  if ("solana" in window) {
+    const provider = window.solana;
 
-
-// CONNECT PHANTOM WALLET
-async function connectWallet() {
-  try {
-    if ("solana" in window) {
-      const provider = window.solana;
-
-      if (provider.isPhantom) {
+    if (provider.isPhantom) {
+      try {
         const resp = await provider.connect();
         walletAddress = resp.publicKey.toString();
 
-        walletDisplay.textContent =
+        walletEl.textContent =
           walletAddress.slice(0, 6) + "..." + walletAddress.slice(-4);
 
-        statusDisplay.textContent = "Wallet Connected";
+        statusEl.textContent = "Wallet Connected";
+      } catch (err) {
+        statusEl.textContent = "Connection cancelled";
       }
-    } else {
-      alert("Open this in Phantom Browser or Chrome with Phantom installed.");
     }
-  } catch (err) {
-    console.error(err);
-    statusDisplay.textContent = "Connection Failed";
+  } else {
+    window.open("https://phantom.app/", "_blank");
   }
-}
-
+});
 
 // START / STOP MINING
-function toggleMining() {
+mineBtn.addEventListener("click", () => {
   if (!walletAddress) {
-    alert("Connect wallet first");
+    statusEl.textContent = "Connect wallet first";
     return;
   }
 
   if (!mining) {
     mining = true;
     mineBtn.textContent = "Stop Mining";
-    statusDisplay.textContent = "Mining Active";
+    statusEl.textContent = "Mining Active";
 
     miningInterval = setInterval(() => {
-      balance += 0.000000050;
-      balanceDisplay.textContent =
+      rewards += 0.000000050;
+      balanceEl.textContent = rewards.toFixed(9) + " VLX";
+    }, 1000);
+  } else {
+    mining = false;
+    mineBtn.textContent = "Start Mining";
+    statusEl.textContent = "Mining Stopped";
+    clearInterval(miningInterval);
+  }
+});
+
+function claimRewards() {
+  statusEl.textContent = "Rewards Claimed";
+}

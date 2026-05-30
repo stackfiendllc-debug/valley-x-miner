@@ -1,74 +1,46 @@
-let walletConnected = false;
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  getDoc
+} from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDCJC-9qG1klPuVgVgypwTPmXrNGjmoFJ8",
+  authDomain: "valley-x-miner.firebaseapp.com",
+  projectId: "valley-x-miner",
+  storageBucket: "valley-x-miner.firebasestorage.app",
+  messagingSenderId: "564050490743",
+  appId: "1:564050490743:web:421b8f7c42d50ed4d15d72",
+  measurementId: "G-5VWEVH3MEE"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+let balance = 0;
 let mining = false;
-let balance = parseFloat(localStorage.getItem("vlxBalance")) || 0;
-let walletAddress = "";
 
-document.getElementById("balance").innerText =
-balance.toFixed(9) + " VLX";
+window.startMining = async function () {
+  if (!window.walletAddress) {
+    alert("Connect Phantom first");
+    return;
+  }
 
-function getProvider() {
-    if ("phantom" in window) {
-        const provider = window.phantom?.solana;
-        if (provider?.isPhantom) return provider;
-    }
-    return null;
-}
+  if (mining) return;
+  mining = true;
 
-async function connectWallet() {
-    const provider = getProvider();
-
-    if (!provider) {
-        window.open("https://phantom.app/", "_blank");
-        return;
-    }
-
-    const response = await provider.connect();
-
-    walletAddress = response.publicKey.toString();
-
-    document.getElementById("wallet").innerText =
-        walletAddress.slice(0,8) + "...";
-
-    walletConnected = true;
-}
-
-function startMining() {
-    if (!walletConnected) {
-        alert("Connect wallet first");
-        return;
-    }
-
-    if (mining) return;
-
-    mining = true;
-
-    setInterval(() => {
-        balance += 0.000000050;
-
-        localStorage.setItem("vlxBalance", balance);
-
-        document.getElementById("balance").innerText =
-            balance.toFixed(9) + " VLX";
-
-    }, 30000);
-}
-
-function claimVLX() {
-    if (!walletConnected) {
-        alert("Connect wallet first");
-        return;
-    }
-
-    if (balance <= 0) {
-        alert("No VLX to claim");
-        return;
-    }
-
-    window.submitClaim(walletAddress, balance);
-
-    balance = 0;
-    localStorage.setItem("vlxBalance", balance);
+  setInterval(async () => {
+    balance += 0.00000005;
 
     document.getElementById("balance").innerText =
-        "0.000000000 VLX";
-}
+      "Balance: " + balance.toFixed(9) + " VLX";
+
+    await setDoc(doc(db, "miners", window.walletAddress), {
+      balance: balance,
+      wallet: window.walletAddress
+    });
+
+  }, 30000);
+};

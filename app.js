@@ -45,7 +45,7 @@ connectBtn.addEventListener("click", async () => {
       await loadWalletData();
 
     } catch (err) {
-      alert("Phantom connection failed");
+      alert("Connection failed");
     }
   } else {
     window.location.href =
@@ -66,7 +66,7 @@ mineBtn.addEventListener("click", async () => {
     balance += 0.000000050;
 
     await updateDoc(doc(db, "miners", walletAddress), {
-      balance: balance
+      balance
     });
 
     updateBalance();
@@ -74,22 +74,17 @@ mineBtn.addEventListener("click", async () => {
 });
 
 async function loadWalletData() {
-  walletDisplay.textContent =
-    walletAddress.slice(0, 6) + "..." + walletAddress.slice(-4);
-
   const userRef = doc(db, "miners", walletAddress);
   const userSnap = await getDoc(userRef);
 
   if (userSnap.exists()) {
     balance = userSnap.data().balance || 0;
-  } else {
-    await setDoc(userRef, {
-      wallet: walletAddress,
-      balance: 0
-    });
-  }
 
-  updateBalance();
+    walletDisplay.textContent =
+      walletAddress.slice(0, 6) + "..." + walletAddress.slice(-4);
+
+    updateBalance();
+  }
 }
 
 function updateBalance() {

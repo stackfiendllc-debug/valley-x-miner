@@ -1,64 +1,59 @@
-let mining = false;
-let earned = parseInt(localStorage.getItem("vlxEarned")) || 0;
-let hashPower = 0;
+let balance = localStorage.getItem("vlxBalance")
+  ? parseFloat(localStorage.getItem("vlxBalance"))
+  : 0;
 
-const connectBtn = document.getElementById("connectWallet");
-const mineBtn = document.getElementById("mineButton");
-const walletDisplay = document.getElementById("walletAddress");
+let mining = localStorage.getItem("vlxMining") === "true";
 
-document.getElementById("earned").innerText = earned + " VLX";
-document.getElementById("balance").innerText = earned + " VLX";
+const balanceEl = document.getElementById("balance");
+const mineBtn = document.getElementById("mineBtn");
+const walletBtn = document.getElementById("walletBtn");
+const statusEl = document.getElementById("status");
 
-connectBtn.addEventListener("click", connectWallet);
+function updateBalance() {
+  balanceEl.textContent = balance.toFixed(2) + " VLX";
+  localStorage.setItem("vlxBalance", balance);
+}
 
-async function connectWallet() {
-    if (window.solana && window.solana.isPhantom) {
-        try {
-            const response = await window.solana.connect();
-
-            const wallet = response.publicKey.toString();
-
-            connectBtn.innerText = "CONNECTED";
-            walletDisplay.innerText =
-                wallet.slice(0, 6) + "..." + wallet.slice(-4);
-
-        } catch (err) {
-            walletDisplay.innerText = "Connection Failed";
-        }
-    } else {
-        window.open(
-            "https://phantom.app/ul/browse/https://stackfiendllc-debug.github.io/valley-x-miner/",
-            "_blank"
-        );
-    }
+function mine() {
+  if (mining) {
+    balance += 0.25;
+    updateBalance();
+  }
 }
 
 mineBtn.addEventListener("click", () => {
-    mining = !mining;
+  mining = !mining;
+  localStorage.setItem("vlxMining", mining);
 
-    if (mining) {
-        mineBtn.innerText = "MINING...";
-        startMining();
-    } else {
-        mineBtn.innerText = "START MINING";
-    }
+  if (mining) {
+    mineBtn.textContent = "Stop Mining";
+    statusEl.textContent = "Mining active...";
+  } else {
+    mineBtn.textContent = "Start Mining";
+    statusEl.textContent = "Mining paused";
+  }
 });
 
-function startMining() {
-    const interval = setInterval(() => {
-        if (!mining) {
-            clearInterval(interval);
-            return;
-        }
+walletBtn.addEventListener("click", async () => {
+  if (window.solana && window.solana.isPhantom) {
+    try {
+      await window.solana.connect();
+      statusEl.textContent = "Phantom Connected";
+    } catch (err) {
+      statusEl.textContent = "Connection failed";
+    }
+  } else {
+    window.open(
+      "https://phantom.app/ul/browse/https://stackfiendllc-debug.github.io/valley-x-miner/",
+      "_blank"
+    );
+  }
+});
 
-        earned += 5;
-        hashPower = Math.floor(Math.random() * 500 + 100);
-
-        localStorage.setItem("vlxEarned", earned);
-
-        document.getElementById("earned").innerText = earned + " VLX";
-        document.getElementById("balance").innerText = earned + " VLX";
-        document.getElementById("hashPower").innerText = hashPower + " H/s";
-
-    }, 1000);
+if (mining) {
+  mineBtn.textContent = "Stop Mining";
+  statusEl.textContent = "Mining active...";
 }
+
+updateBalance();
+setInterval(mine, 3000);

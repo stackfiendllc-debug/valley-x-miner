@@ -1,154 +1,57 @@
 const SUPABASE_URL = "https://vjalivzqoiqnuadbkrce.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZqYWxpdnpxb2lxbnVhZGJrcmNlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAxMTI5NDMsImV4cCI6MjA5NTY4ODk0M30.nIh-u0GHpQkBPQWLN7UKETagAJOoaIbVml3TCtEJpoE";
+const SUPABASE_KEY = "YOUR_SUPABASE_ANON_KEY";
 
-const supabase = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let walletAddress = null;
-let miningInterval = null;
-let isMining = false;
-const miningRate = 0.000000050;
+let mining = false;
+let miningInterval;
+let balance = 0;
 
 const connectBtn = document.getElementById("connectBtn");
 const mineBtn = document.getElementById("mineBtn");
-const claimBtn = document.getElementById("claimBtn");
+const walletDisplay = document.getElementById("wallet");
+const balanceDisplay = document.getElementById("balance");
+const statusDisplay = document.getElementById("status");
 
-const walletEl = document.getElementById("wallet");
-const balanceEl = document.getElementById("balance");
-const statusEl = document.getElementById("status");
 
-connectBtn.onclick = connectWallet;
-mineBtn.onclick = toggleMining;
-claimBtn.onclick = claimRewards;
-
+// CONNECT PHANTOM WALLET
 async function connectWallet() {
   try {
-    const provider = window.phantom?.solana || window.solana;
+    if ("solana" in window) {
+      const provider = window.solana;
 
-    if (!provider || !provider.isPhantom) {
-      statusEl.textContent = "Open in Phantom Browser";
-      window.location.href =
-        "https://phantom.app/ul/browse/https://stackfiendllc-debug.github.io/valley-x-miner/";
-      return;
+      if (provider.isPhantom) {
+        const resp = await provider.connect();
+        walletAddress = resp.publicKey.toString();
+
+        walletDisplay.textContent =
+          walletAddress.slice(0, 6) + "..." + walletAddress.slice(-4);
+
+        statusDisplay.textContent = "Wallet Connected";
+      }
+    } else {
+      alert("Open this in Phantom Browser or Chrome with Phantom installed.");
     }
-
-    const response = await provider.connect({
-      onlyIfTrusted: false
-    });
-
-    walletAddress = response.publicKey.toString();
-
-    walletEl.textContent =
-      walletAddress.slice(0, 6) +
-      "..." +
-      walletAddress.slice(-4);
-
-    statusEl.textContent = "Connected";
-
-    await createMiner();
-    await refreshData();
-
   } catch (err) {
     console.error(err);
-    statusEl.textContent = "Connection Failed";
+    statusDisplay.textContent = "Connection Failed";
   }
 }
 
-async function createMiner() {
-  const { data } = await supabase
-    .from("miners")
-    .select("*")
-    .eq("wallet", walletAddress)
-    .single();
 
-  if (!data) {
-    await supabase.from("miners").insert([{
-      wallet: walletAddress,
-      rewards: 0,
-      mining: false
-    }]);
-  }
-}
-
-async function refreshData() {
-  const { data } = await supabase
-    .from("miners")
-    .select("*")
-    .eq("wallet", walletAddress)
-    .single();
-
-  if (data) {
-    balanceEl.textContent =
-      Number(data.rewards).toFixed(9) + " VLX";
-
-    isMining = data.mining;
-
-    if (isMining) {
-      mineBtn.textContent = "Stop Mining";
-      statusEl.textContent = "Mining Live";
-      beginMiningLoop();
-    }
-  }
-}
-
-function beginMiningLoop() {
-  clearInterval(miningInterval);
-
-  miningInterval = setInterval(async () => {
-    const { data } = await supabase
-      .from("miners")
-      .select("rewards")
-      .eq("wallet", walletAddress)
-      .single();
-
-    const updated =
-      Number(data.rewards) + miningRate;
-
-    await supabase
-      .from("miners")
-      .update({ rewards: updated })
-      .eq("wallet", walletAddress);
-
-    balanceEl.textContent =
-      updated.toFixed(9) + " VLX";
-
-  }, 30000);
-}
-
-async function toggleMining() {
+// START / STOP MINING
+function toggleMining() {
   if (!walletAddress) {
     alert("Connect wallet first");
     return;
   }
 
-  isMining = !isMining;
-
-  await supabase
-    .from("miners")
-    .update({ mining: isMining })
-    .eq("wallet", walletAddress);
-
-  if (isMining) {
+  if (!mining) {
+    mining = true;
     mineBtn.textContent = "Stop Mining";
-    statusEl.textContent = "Mining Live";
-    beginMiningLoop();
-  } else {
-    clearInterval(miningInterval);
-    mineBtn.textContent = "Start Mining";
-    statusEl.textContent = "Stopped";
-  }
-}
+    statusDisplay.textContent = "Mining Active";
 
-async function claimRewards() {
-  if (!walletAddress) return;
-
-  await supabase
-    .from("miners")
-    .update({ rewards: 0 })
-    .eq("wallet", walletAddress);
-
-  balanceEl.textContent = "0.000000000 VLX";
-  statusEl.textContent = "Rewards Claimed";
-}
+    miningInterval = setInterval(() => {
+      balance += 0.000000050;
+      balanceDisplay.textContent =

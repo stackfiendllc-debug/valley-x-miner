@@ -1,42 +1,35 @@
 let walletConnected = false;
 let mining = false;
-let balance = 0;
-let provider = null;
+let balance = parseFloat(localStorage.getItem("vlxBalance")) || 0;
+let walletAddress = "";
+
+document.getElementById("balance").innerText =
+balance.toFixed(9) + " VLX";
 
 function getProvider() {
     if ("phantom" in window) {
-        const anyWindow = window;
-        if (anyWindow.phantom?.solana?.isPhantom) {
-            return anyWindow.phantom.solana;
-        }
+        const provider = window.phantom?.solana;
+        if (provider?.isPhantom) return provider;
     }
-
-    if (window.solana?.isPhantom) {
-        return window.solana;
-    }
-
     return null;
 }
 
 async function connectWallet() {
-    provider = getProvider();
+    const provider = getProvider();
 
     if (!provider) {
-        alert("Phantom Wallet not detected. Install Phantom.");
         window.open("https://phantom.app/", "_blank");
         return;
     }
 
-    try {
-        const response = await provider.connect();
+    const response = await provider.connect();
 
-        document.getElementById("wallet").innerText =
-            response.publicKey.toString().slice(0,8) + "...";
+    walletAddress = response.publicKey.toString();
 
-        walletConnected = true;
-    } catch (err) {
-        alert("Wallet connection cancelled");
-    }
+    document.getElementById("wallet").innerText =
+        walletAddress.slice(0,8) + "...";
+
+    walletConnected = true;
 }
 
 function startMining() {
@@ -52,7 +45,30 @@ function startMining() {
     setInterval(() => {
         balance += 0.000000050;
 
+        localStorage.setItem("vlxBalance", balance);
+
         document.getElementById("balance").innerText =
             balance.toFixed(9) + " VLX";
+
     }, 30000);
+}
+
+function claimVLX() {
+    if (!walletConnected) {
+        alert("Connect wallet first");
+        return;
+    }
+
+    if (balance <= 0) {
+        alert("No VLX to claim");
+        return;
+    }
+
+    window.submitClaim(walletAddress, balance);
+
+    balance = 0;
+    localStorage.setItem("vlxBalance", balance);
+
+    document.getElementById("balance").innerText =
+        "0.000000000 VLX";
 }

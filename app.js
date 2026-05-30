@@ -7,6 +7,7 @@ const statusEl = document.getElementById("status");
 let walletAddress = null;
 let mining = false;
 let rewards = 0.000000050;
+let claimedBalance = 0;
 let miningInterval = null;
 
 // CONNECT PHANTOM
@@ -22,7 +23,17 @@ connectBtn.addEventListener("click", async () => {
         walletEl.textContent =
           walletAddress.slice(0, 6) + "..." + walletAddress.slice(-4);
 
+        // Load saved claimed balance
+        const saved = localStorage.getItem(walletAddress);
+
+        if (saved) {
+          claimedBalance = parseFloat(saved);
+          rewards = claimedBalance;
+        }
+
+        balanceEl.textContent = rewards.toFixed(9) + " VLX";
         statusEl.textContent = "Wallet Connected";
+
       } catch (err) {
         statusEl.textContent = "Connection cancelled";
       }
@@ -48,6 +59,7 @@ mineBtn.addEventListener("click", () => {
       rewards += 0.000000050;
       balanceEl.textContent = rewards.toFixed(9) + " VLX";
     }, 1000);
+
   } else {
     mining = false;
     mineBtn.textContent = "Start Mining";
@@ -56,6 +68,18 @@ mineBtn.addEventListener("click", () => {
   }
 });
 
+// CLAIM REWARDS
 function claimRewards() {
-  statusEl.textContent = "Rewards Claimed";
+  if (!walletAddress) {
+    statusEl.textContent = "Connect wallet first";
+    return;
+  }
+
+  claimedBalance = rewards;
+  localStorage.setItem(walletAddress, claimedBalance);
+
+  statusEl.textContent = "Rewards Claimed & Saved";
 }
+
+// Make claim button work
+window.claimRewards = claimRewards;

@@ -3,26 +3,32 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Valley X Miner</title>
+  <title>VLX Miner</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+
   <div class="container">
-    <img src="logo.jpeg" class="logo" alt="VLX Logo" />
+    <img
+      src="./logo.jpeg"
+      alt="VLX Logo"
+      class="logo"
+      onerror="this.src='logo.jpeg'"
+    />
 
-    <h1>Valley X Miner</h1>
-    <p>Mine VLX Tokens</p>
+    <h1>VALLEY X MINER</h1>
 
-    <div class="stats">
-      <h2 id="balance">0 VLX</h2>
+    <div class="card">
+      <h2 id="balance">0.00 VLX</h2>
+      <p id="status">Connect wallet to begin</p>
+
+      <button id="walletBtn">Connect Phantom</button>
+      <button id="mineBtn">Start Mining</button>
     </div>
-
-    <button id="mineBtn">Start Mining</button>
-    <button id="walletBtn">Open / Connect Phantom</button>
-
-    <p id="status">Ready to mine</p>
   </div>
 
+  <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
   <script src="script.js"></script>
+
 </body>
 </html>

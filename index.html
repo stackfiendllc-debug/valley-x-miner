@@ -1,64 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Valley X Miner</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <div class="dashboard">
 
-<header class="hero">
-  <img src="logo.png" alt="Valley X Logo" class="logo">
+    <header>
+      <img src="logo.jpeg" alt="VLX Logo" class="logo" />
+      <h1>VALLEY X MINER</h1>
+      <p>Secure Phantom Connected Mining Dashboard</p>
+    </header>
 
-  <h1>VALLEY X MINER</h1>
-  <p class="subtitle">Official VLX Mining Dashboard</p>
-</header>
-
-<main class="dashboard">
-
-  <div class="dashboard-card">
-    <div class="status-bar"></div>
-
-    <h2>Mining Console</h2>
-
-    <div class="stats">
-
-      <div class="stat">
-        <label>Status</label>
-        <span id="walletStatus">Disconnected</span>
-      </div>
-
-      <div class="stat">
-        <label>Balance</label>
-        <span id="walletBalance">0.000000000 VLX</span>
-      </div>
-
-      <div class="stat">
-        <label>Mining Rate</label>
-        <span>0.000000050 VLX / 30s</span>
-      </div>
-
+    <div class="wallet-section">
+      <button id="connectBtn">Connect Phantom</button>
+      <p id="walletAddress">Not Connected</p>
     </div>
 
-    <div class="button-wrap">
-      <button id="connectWallet" class="connect-btn">
-        Connect Phantom
-      </button>
+    <div class="mining-section">
+      <h2>Mining Balance</h2>
+      <p id="balance">0.00000000 VLX</p>
 
-      <button id="startMining" class="mine-btn">
-        Start Mining
-      </button>
+      <button id="mineBtn">Start Mining</button>
+      <button id="testBtn">Test Button</button>
     </div>
+
+    <div class="status-section">
+      <p id="status">System Ready</p>
+    </div>
+
   </div>
 
-</main>
-
-<footer>
-  © 2026 Valley X Token | Secure Mining Protocol
-</footer>
-
-<script src="script.js"></script>
-
+  <script src="script.js"></script>
 </body>
 </html>

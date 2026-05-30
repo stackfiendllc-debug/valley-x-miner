@@ -1,40 +1,37 @@
-let balance = 0;
+let walletConnected = false;
 let mining = false;
+let balance = 0;
+let miningInterval = null;
 
-const connectBtn = document.getElementById("connectBtn");
-const mineBtn = document.getElementById("mineBtn");
-const testBtn = document.getElementById("testBtn");
-
-const walletAddress = document.getElementById("walletAddress");
-const balanceDisplay = document.getElementById("balance");
-const status = document.getElementById("status");
-
-connectBtn.addEventListener("click", async () => {
-  if ("solana" in window) {
-    try {
-      const resp = await window.solana.connect();
-      walletAddress.textContent = resp.publicKey.toString();
-      status.textContent = "Phantom Connected";
-    } catch {
-      status.textContent = "Connection Cancelled";
+async function connectWallet() {
+    if (window.solana && window.solana.isPhantom) {
+        try {
+            const response = await window.solana.connect();
+            document.getElementById("wallet").innerText =
+                response.publicKey.toString().slice(0,8) + "...";
+            walletConnected = true;
+        } catch (err) {
+            alert("Wallet connection cancelled");
+        }
+    } else {
+        alert("Install Phantom Wallet");
+        window.open("https://phantom.app/", "_blank");
     }
-  } else {
-    status.textContent = "Install Phantom Wallet";
-  }
-});
+}
 
-mineBtn.addEventListener("click", () => {
-  if (mining) return;
+function startMining() {
+    if (!walletConnected) {
+        alert("Connect wallet first");
+        return;
+    }
 
-  mining = true;
-  status.textContent = "Mining Started";
+    if (mining) return;
 
-  setInterval(() => {
-    balance += 0.00000005;
-    balanceDisplay.textContent = balance.toFixed(8) + " VLX";
-  }, 30000);
-});
+    mining = true;
 
-testBtn.addEventListener("click", () => {
-  status.textContent = "Test Successful";
-});
+    miningInterval = setInterval(() => {
+        balance += 0.000000050;
+        document.getElementById("balance").innerText =
+            balance.toFixed(9) + " VLX";
+    }, 30000);
+}

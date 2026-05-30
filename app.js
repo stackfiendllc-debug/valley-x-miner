@@ -2,6 +2,7 @@ const connectBtn = document.getElementById("connectBtn");
 const mineBtn = document.getElementById("mineBtn");
 const walletEl = document.getElementById("wallet");
 const balanceEl = document.getElementById("balance");
+const claimedEl = document.getElementById("claimed");
 const statusEl = document.getElementById("status");
 
 let walletAddress = null;
@@ -29,12 +30,18 @@ connectBtn.addEventListener("click", async () => {
           claimedBalance = parseFloat(saved);
         }
 
+        claimedEl.textContent =
+          claimedBalance.toFixed(9) + " VLX";
+
         rewards = 0.000000050;
-        balanceEl.textContent = rewards.toFixed(9) + " VLX";
+
+        balanceEl.textContent =
+          rewards.toFixed(9) + " VLX";
+
         statusEl.textContent = "Wallet Connected";
 
       } catch (err) {
-        statusEl.textContent = "Connection cancelled";
+        statusEl.textContent = "Connection Cancelled";
       }
     }
   } else {
@@ -45,7 +52,7 @@ connectBtn.addEventListener("click", async () => {
 // START / STOP MINING
 mineBtn.addEventListener("click", () => {
   if (!walletAddress) {
-    statusEl.textContent = "Connect wallet first";
+    statusEl.textContent = "Connect Wallet First";
     return;
   }
 
@@ -56,13 +63,16 @@ mineBtn.addEventListener("click", () => {
 
     miningInterval = setInterval(() => {
       rewards += 0.000000050;
-      balanceEl.textContent = rewards.toFixed(9) + " VLX";
+
+      balanceEl.textContent =
+        rewards.toFixed(9) + " VLX";
     }, 1000);
 
   } else {
     mining = false;
     mineBtn.textContent = "Start Mining";
     statusEl.textContent = "Mining Stopped";
+
     clearInterval(miningInterval);
   }
 });
@@ -70,7 +80,7 @@ mineBtn.addEventListener("click", () => {
 // CLAIM REWARDS
 async function claimRewards() {
   if (!walletAddress) {
-    statusEl.textContent = "Connect wallet first";
+    statusEl.textContent = "Connect Wallet First";
     return;
   }
 
@@ -83,10 +93,19 @@ async function claimRewards() {
     );
 
     claimedBalance += rewards;
-    localStorage.setItem(walletAddress, claimedBalance);
+
+    localStorage.setItem(
+      walletAddress,
+      claimedBalance
+    );
+
+    claimedEl.textContent =
+      claimedBalance.toFixed(9) + " VLX";
 
     rewards = 0.000000050;
-    balanceEl.textContent = rewards.toFixed(9) + " VLX";
+
+    balanceEl.textContent =
+      rewards.toFixed(9) + " VLX";
 
     statusEl.textContent = "Rewards Claimed";
 

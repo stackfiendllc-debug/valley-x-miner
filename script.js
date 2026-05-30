@@ -9,8 +9,8 @@ const statusEl = document.getElementById("walletStatus");
 
 connectBtn.addEventListener("click", () => {
   walletConnected = true;
-  statusEl.textContent = "Wallet Connected";
-  connectBtn.textContent = "Connected";
+  statusEl.textContent = "Connected";
+  connectBtn.textContent = "Phantom Connected";
 });
 
 mineBtn.addEventListener("click", () => {

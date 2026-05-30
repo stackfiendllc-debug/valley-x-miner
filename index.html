@@ -1,200 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Valley X Miner</title>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<style>
-body {
-  font-family: Arial, sans-serif;
-  background: #000;
-  color: #fff;
-  text-align: center;
-  padding: 20px;
-}
-
-.container {
-  max-width: 420px;
-  margin: auto;
-  background: #111;
-  padding: 25px;
-  border-radius: 15px;
-  border: 2px solid red;
-}
-
-button {
-  width: 100%;
-  padding: 14px;
-  margin: 8px 0;
-  border: none;
-  border-radius: 10px;
-  background: red;
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-button:hover {
-  background: darkred;
-}
-
-.stats {
-  margin: 20px 0;
-  font-size: 18px;
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Valley X Miner</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
 <div class="container">
+  <img src="logo.png" class="logo" alt="Valley X Logo" />
+
   <h1>VALLEY X MINER</h1>
 
-  <button id="connectBtn" onclick="connectWallet()">Connect Wallet</button>
-
-  <div class="stats">
-    <p>Wallet: <span id="walletAddress">Not Connected</span></p>
-    <p>Mining Status: <span id="status">Offline</span></p>
-    <p>Rewards: <span id="rewards">0.000000000</span> VLX</p>
+  <div class="button-group">
+    <button id="connectBtn">Connect Wallet</button>
+    <button id="mineBtn">Start Mining</button>
+    <button id="claimBtn" onclick="claimRewards()">Claim Rewards</button>
   </div>
 
-  <button onclick="startMining()">Start Mining</button>
-  <button onclick="stopMining()">Stop Mining</button>
-  <button onclick="claimRewards()">Claim Rewards</button>
+  <div class="card">
+    <strong>Wallet:</strong>
+    <span id="wallet">Not Connected</span>
+  </div>
+
+  <div class="card">
+    <strong>Rewards:</strong>
+    <span id="balance">0.000000000 VLX</span>
+  </div>
+
+  <div class="card">
+    <strong>Status:</strong>
+    <span id="status">Ready</span>
+  </div>
+
 </div>
 
-<script>
-const supabaseUrl = "https://vjalivzqoiqnuadbkrce.supabase.co";
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZqYWxpdnpxb2lxbnVhZGJrcmNlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAxMTI5NDMsImV4cCI6MjA5NTY4ODk0M30.nIh-u0GHpQkBPQWLN7UKETagAJOoaIbVml3TCtEJpoE";
-const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-
-let walletAddress = null;
-let miningInterval = null;
-const miningRate = 0.000000050;
-
-async function connectWallet() {
-  try {
-    const provider = window.phantom?.solana;
-
-    if (provider?.isPhantom) {
-      const response = await provider.connect();
-      walletAddress = response.publicKey.toString();
-
-      document.getElementById("walletAddress").textContent =
-        walletAddress.slice(0,6) + "..." + walletAddress.slice(-4);
-
-      document.getElementById("connectBtn").textContent = "Connected";
-
-      await loadMiner();
-    } else {
-      window.open("https://phantom.app/", "_blank");
-    }
-  } catch (err) {
-    alert("Wallet connection failed");
-    console.error(err);
-  }
-}
-
-async function loadMiner() {
-  const { data } = await supabase
-    .from("miners")
-    .select("*")
-    .eq("wallet", walletAddress)
-    .single();
-
-  if (!data) {
-    await supabase.from("miners").insert([{
-      wallet: walletAddress,
-      rewards: 0,
-      mining: false
-    }]);
-  }
-
-  refreshData();
-}
-
-async function refreshData() {
-  const { data } = await supabase
-    .from("miners")
-    .select("*")
-    .eq("wallet", walletAddress)
-    .single();
-
-  if (data) {
-    document.getElementById("rewards").textContent =
-      Number(data.rewards).toFixed(9);
-
-    document.getElementById("status").textContent =
-      data.mining ? "Mining Live" : "Offline";
-
-    if (data.mining) beginMiningLoop();
-  }
-}
-
-function beginMiningLoop() {
-  clearInterval(miningInterval);
-
-  miningInterval = setInterval(async () => {
-    const { data } = await supabase
-      .from("miners")
-      .select("rewards")
-      .eq("wallet", walletAddress)
-      .single();
-
-    const newRewards = Number(data.rewards) + miningRate;
-
-    await supabase
-      .from("miners")
-      .update({ rewards: newRewards })
-      .eq("wallet", walletAddress);
-
-    document.getElementById("rewards").textContent =
-      newRewards.toFixed(9);
-
-  }, 30000);
-}
-
-async function startMining() {
-  if (!walletAddress) return alert("Connect wallet first");
-
-  await supabase
-    .from("miners")
-    .update({ mining: true })
-    .eq("wallet", walletAddress);
-
-  document.getElementById("status").textContent = "Mining Live";
-
-  beginMiningLoop();
-}
-
-async function stopMining() {
-  if (!walletAddress) return;
-
-  clearInterval(miningInterval);
-
-  await supabase
-    .from("miners")
-    .update({ mining: false })
-    .eq("wallet", walletAddress);
-
-  document.getElementById("status").textContent = "Offline";
-}
-
-async function claimRewards() {
-  if (!walletAddress) return;
-
-  await supabase
-    .from("miners")
-    .update({ rewards: 0 })
-    .eq("wallet", walletAddress);
-
-  document.getElementById("rewards").textContent = "0.000000000";
-
-  alert("Rewards claimed");
-}
-</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="app.js"></script>
 
 </body>
 </html>

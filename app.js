@@ -3,8 +3,7 @@ import {
   getFirestore,
   doc,
   getDoc,
-  setDoc,
-  updateDoc
+  setDoc
 } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -21,32 +20,45 @@ const db = getFirestore(app);
 
 let walletAddress = localStorage.getItem("vlxWallet");
 let balance = 0;
-let miningStarted = false;
+let miningInterval = null;
 
 const connectBtn = document.getElementById("connectBtn");
 const mineBtn = document.getElementById("mineBtn");
 const walletDisplay = document.getElementById("wallet");
 const balanceDisplay = document.getElementById("balance");
 
-if (walletAddress) {
-  loadWalletData();
+async function loadWalletData() {
+  if (!walletAddress) return;
+
+  const ref = doc(db, "miners", walletAddress);
+  const snap = await getDoc(ref);
+
+  if (snap.exists()) {
+    balance = snap.data().balance || 0;
+  } else {
+    await setDoc(ref, {
+      wallet: walletAddress,
+      balance: 0
+    });
+    balance = 0;
+  }
+
+  walletDisplay.textContent =
+    walletAddress.slice(0, 6) + "..." + walletAddress.slice(-4);
+
+  updateBalance();
 }
 
 connectBtn.addEventListener("click", async () => {
   const provider = window.phantom?.solana || window.solana;
 
   if (provider?.isPhantom) {
-    try {
-      const resp = await provider.connect();
-      walletAddress = resp.publicKey.toString();
+    const resp = await provider.connect();
 
-      localStorage.setItem("vlxWallet", walletAddress);
+    walletAddress = resp.publicKey.toString();
+    localStorage.setItem("vlxWallet", walletAddress);
 
-      await loadWalletData();
-
-    } catch (err) {
-      alert("Connection failed");
-    }
+    await loadWalletData();
   } else {
     window.location.href =
       "https://phantom.app/ul/browse/https://stackfiendllc-debug.github.io/valley-x-miner/";
@@ -59,34 +71,23 @@ mineBtn.addEventListener("click", async () => {
     return;
   }
 
-  if (miningStarted) return;
-  miningStarted = true;
+  if (miningInterval) return;
 
-  setInterval(async () => {
+  miningInterval = setInterval(async () => {
     balance += 0.000000050;
 
-    await updateDoc(doc(db, "miners", walletAddress), {
-      balance
+    await setDoc(doc(db, "miners", walletAddress), {
+      wallet: walletAddress,
+      balance: balance
     });
 
     updateBalance();
   }, 30000);
 });
 
-async function loadWalletData() {
-  const userRef = doc(db, "miners", walletAddress);
-  const userSnap = await getDoc(userRef);
-
-  if (userSnap.exists()) {
-    balance = userSnap.data().balance || 0;
-
-    walletDisplay.textContent =
-      walletAddress.slice(0, 6) + "..." + walletAddress.slice(-4);
-
-    updateBalance();
-  }
-}
-
 function updateBalance() {
   balanceDisplay.textContent = balance.toFixed(9) + " VLX";
 }
+
+// Load Firebase balance on page open
+loadWalletData();

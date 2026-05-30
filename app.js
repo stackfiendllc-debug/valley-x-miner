@@ -6,17 +6,12 @@ const statusDisplay = document.getElementById("status");
 
 let walletAddress = null;
 
-// VLX token mint (YOUR COIN)
+// 🔵 Your VLX mint address
 const VLX_MINT = "4G72cw8r5YgLjaH7xjzHK8JA8duwUqq2vj9u9bkjMGCg";
-
-// Mining state
-let mining = false;
-let miningInterval = null;
-let pendingRewards = 0;
 
 
 // -----------------------------
-// CONNECT PHANTOM WALLET
+// PHANTOM CONNECT (MODERN FLOW)
 // -----------------------------
 connectBtn.addEventListener("click", async () => {
   const provider = window.solana;
@@ -33,19 +28,19 @@ connectBtn.addEventListener("click", async () => {
     walletDisplay.textContent =
       walletAddress.slice(0, 6) + "..." + walletAddress.slice(-4);
 
-    statusDisplay.textContent = "Wallet Connected";
+    statusDisplay.textContent = "Connected";
 
     await loadBalance();
 
   } catch (err) {
-    console.error(err);
+    console.error("Connection error:", err);
     statusDisplay.textContent = "Connection Failed";
   }
 });
 
 
 // -----------------------------
-// REAL VLX BALANCE FROM SOLANA
+// REAL VLX BALANCE FETCH
 // -----------------------------
 async function loadBalance() {
   if (!walletAddress) return;
@@ -82,41 +77,15 @@ async function loadBalance() {
     balanceDisplay.textContent = balance.toFixed(9) + " VLX";
 
   } catch (err) {
-    console.error("Balance error:", err);
+    console.error("Balance fetch error:", err);
     balanceDisplay.textContent = "0.000000000 VLX";
   }
 }
 
 
 // -----------------------------
-// MINING (REWARD SIMULATION UI)
+// MINING BUTTON (PLACEHOLDER ONLY)
 // -----------------------------
 mineBtn.addEventListener("click", () => {
-  if (!walletAddress) {
-    alert("Connect wallet first");
-    return;
-  }
-
-  // STOP MINING
-  if (mining) {
-    mining = false;
-    clearInterval(miningInterval);
-
-    mineBtn.textContent = "Start Mining";
-    statusDisplay.textContent = "Mining Stopped";
-
-    return;
-  }
-
-  // START MINING
-  mining = true;
-  mineBtn.textContent = "Stop Mining";
-  statusDisplay.textContent = "Mining Active";
-
-  miningInterval = setInterval(() => {
-    pendingRewards += 0.000000050;
-
-    balanceDisplay.textContent =
-      pendingRewards.toFixed(9) + " VLX (Pending)";
-  }, 30000);
+  alert("Mining will be upgraded to staking/rewards in next version.");
 });

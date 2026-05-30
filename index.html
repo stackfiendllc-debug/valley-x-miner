@@ -2,38 +2,33 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Valley X Miner</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
 
 <div class="container">
-    <img src="logo.png" class="logo" alt="VLX Logo">
+  <img src="logo.png" class="logo" />
 
-    <h1>VALLEY X MINER</h1>
+  <h1>VALLEY X MINER</h1>
 
-    <button id="connectBtn">Connect Phantom</button>
-    <button id="mineBtn">Mining (Coming Soon)</button>
+  <button id="connectBtn">Connect Wallet</button>
+  <button id="mineBtn">Start Mining</button>
 
-    <div class="card">
-        <p>Wallet: <span id="wallet">Not Connected</span></p>
-    </div>
+  <div class="card">
+    Wallet: <span id="wallet">Not Connected</span>
+  </div>
 
-    <div class="card">
-        <p>Balance: <span id="balance">0.000000000 VLX</span></p>
-    </div>
+  <div class="card">
+    Balance: <span id="balance">0.000000000 VLX</span>
+  </div>
 
-    <div class="card">
-        <p>Status: <span id="status">Idle</span></p>
-    </div>
+  <div class="card">
+    Status: <span id="status">Idle</span>
+  </div>
 </div>
 
-<!-- Phantom Connect SDK -->
-<script src="https://cdn.phantom.com/connect/v1/browser.min.js"></script>
-
-<!-- Your App -->
 <script src="app.js"></script>
-
 </body>
 </html>

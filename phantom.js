@@ -2,40 +2,22 @@ import { BrowserSDK, AddressType } from "https://esm.sh/@phantom/browser-sdk";
 
 const sdk = new BrowserSDK({
   providers: ["injected"],
-  addressTypes: [AddressType.solana],
-  autoConnect: true
+  addressTypes: [AddressType.solana]
 });
 
 window.connectPhantomWallet = async function () {
   try {
     const result = await sdk.connect();
 
-    const wallet =
-      result.addresses?.[0]?.address ||
-      result.publicKey?.toString();
+    const wallet = result.addresses[0].address;
 
-    if (!wallet) {
-      throw new Error("Wallet not found");
-    }
-
-    const walletDisplay = document.getElementById("wallet");
-
-    if (walletDisplay) {
-      walletDisplay.innerText =
-        "Wallet: " +
-        wallet.slice(0, 6) +
-        "..." +
-        wallet.slice(-4);
-    }
-
-    localStorage.setItem("vlxWallet", wallet);
-    window.walletConnected = true;
     window.walletAddress = wallet;
 
-    console.log("Connected:", wallet);
+    document.getElementById("wallet").innerText =
+      "Wallet: " + wallet.slice(0,6) + "..." + wallet.slice(-4);
 
-  } catch (error) {
-    console.error(error);
-    alert("Phantom connection failed");
+  } catch (err) {
+    console.error(err);
+    alert("Connection failed");
   }
 };

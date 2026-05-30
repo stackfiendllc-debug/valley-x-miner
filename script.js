@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
     pulse.classList.add("active");
 
     miningInterval = setInterval(() => {
-      balance += 0.00005;   // ultra slow realistic rate
+      balance += 0.00005;
       balanceEl.textContent = balance.toFixed(8) + " VLX";
     }, 5000);
   });

@@ -23,10 +23,13 @@ async function connectWallet() {
                 wallet.slice(0, 6) + "..." + wallet.slice(-4);
 
         } catch (err) {
-            walletDisplay.innerText = "Connection failed";
+            walletDisplay.innerText = "Connection Failed";
         }
     } else {
-        window.location.href = "https://phantom.app/download";
+        window.open(
+            "https://phantom.app/ul/browse/https://stackfiendllc-debug.github.io/valley-x-miner/",
+            "_blank"
+        );
     }
 }
 

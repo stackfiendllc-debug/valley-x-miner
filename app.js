@@ -6,13 +6,17 @@ const statusDisplay = document.getElementById("status");
 
 let walletAddress = null;
 
-// 🔵 Your VLX mint address
+// Your VLX mint
 const VLX_MINT = "4G72cw8r5YgLjaH7xjzHK8JA8duwUqq2vj9u9bkjMGCg";
 
+// Mining state
+let mining = false;
+let reward = 0;
 
-// -----------------------------
-// PHANTOM CONNECT (MODERN FLOW)
-// -----------------------------
+---
+
+# 🟢 CONNECT WALLET (SAFE PHANTOM METHOD)
+
 connectBtn.addEventListener("click", async () => {
   const provider = window.solana;
 
@@ -26,66 +30,83 @@ connectBtn.addEventListener("click", async () => {
     walletAddress = resp.publicKey.toString();
 
     walletDisplay.textContent =
-      walletAddress.slice(0, 6) + "..." + walletAddress.slice(-4);
+      walletAddress.slice(0,6) + "..." + walletAddress.slice(-4);
 
     statusDisplay.textContent = "Connected";
 
-    await loadBalance();
+    loadBalance();
 
-  } catch (err) {
-    console.error("Connection error:", err);
+  } catch (e) {
     statusDisplay.textContent = "Connection Failed";
   }
 });
 
+---
 
-// -----------------------------
-// REAL VLX BALANCE FETCH
-// -----------------------------
+# 💰 REAL BALANCE (RPC ONLY)
+
 async function loadBalance() {
   if (!walletAddress) return;
 
   try {
-    const response = await fetch("https://api.mainnet-beta.solana.com", {
+    const res = await fetch("https://api.mainnet-beta.solana.com", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {"Content-Type":"application/json"},
       body: JSON.stringify({
-        jsonrpc: "2.0",
-        id: 1,
-        method: "getTokenAccountsByOwner",
-        params: [
+        jsonrpc:"2.0",
+        id:1,
+        method:"getTokenAccountsByOwner",
+        params:[
           walletAddress,
           { mint: VLX_MINT },
-          { encoding: "jsonParsed" }
+          { encoding:"jsonParsed" }
         ]
       })
     });
 
-    const data = await response.json();
+    const data = await res.json();
 
-    let balance = 0;
+    let bal = 0;
 
-    const accounts = data?.result?.value || [];
+    (data.result?.value || []).forEach(acc => {
+      const amt = acc.account.data.parsed.info.tokenAmount.uiAmount;
+      if (amt) bal += amt;
+    });
 
-    for (const acc of accounts) {
-      const amount =
-        acc?.account?.data?.parsed?.info?.tokenAmount?.uiAmount;
+    balanceDisplay.textContent = bal.toFixed(9) + " VLX";
 
-      if (amount) balance += amount;
-    }
-
-    balanceDisplay.textContent = balance.toFixed(9) + " VLX";
-
-  } catch (err) {
-    console.error("Balance fetch error:", err);
+  } catch (e) {
     balanceDisplay.textContent = "0.000000000 VLX";
   }
 }
 
+---
 
-// -----------------------------
-// MINING BUTTON (PLACEHOLDER ONLY)
-// -----------------------------
+# ⛏️ MINING (CLEAN REWARD SYSTEM)
+
 mineBtn.addEventListener("click", () => {
-  alert("Mining will be upgraded to staking/rewards in next version.");
+  if (!walletAddress) {
+    alert("Connect wallet first");
+    return;
+  }
+
+  if (!mining) {
+    mining = true;
+    statusDisplay.textContent = "Mining Active";
+    mineBtn.textContent = "Stop Mining";
+
+    setInterval(() => {
+      if (!mining) return;
+
+      reward += 0.00000005;
+
+      balanceDisplay.textContent =
+        reward.toFixed(9) + " VLX (Pending)";
+    }, 10000);
+
+  } else {
+    mining = false;
+    statusDisplay.textContent = "Idle";
+    mineBtn.textContent = "Start Mining";
+  }
 });

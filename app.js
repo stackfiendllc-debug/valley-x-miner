@@ -11,6 +11,9 @@ let rewards = 0.000000050;
 let claimedBalance = 0;
 let miningInterval = null;
 
+const TREASURY_WALLET =
+  "4G72cw8r5YgLjaH7xjzHK8JA8duwUqq2vj9u9bkjMGCg";
+
 // CONNECT WALLET
 connectBtn.addEventListener("click", async () => {
   if ("solana" in window) {
@@ -22,7 +25,8 @@ connectBtn.addEventListener("click", async () => {
         walletAddress = resp.publicKey.toString();
 
         walletEl.textContent =
-          walletAddress.slice(0, 6) + "..." + walletAddress.slice(-4);
+          walletAddress.slice(0, 6) + "..." +
+          walletAddress.slice(-4);
 
         const saved = localStorage.getItem(walletAddress);
 
@@ -87,10 +91,44 @@ async function claimRewards() {
   try {
     const provider = window.solana;
 
-    await provider.signMessage(
-      new TextEncoder().encode("Claim Valley X Rewards"),
-      "utf8"
-    );
+    const connection =
+      new solanaWeb3.Connection(
+        "https://api.mainnet-beta.solana.com",
+        "confirmed"
+      );
+
+    const transaction =
+      new solanaWeb3.Transaction();
+
+    const memoInstruction =
+      new solanaWeb3.TransactionInstruction({
+        keys: [],
+        programId: new solanaWeb3.PublicKey(
+          "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr"
+        ),
+        data: new TextEncoder().encode(
+          `VLX CLAIM | ${walletAddress} | ${rewards.toFixed(9)}`
+        )
+      });
+
+    transaction.add(memoInstruction);
+
+    transaction.feePayer = provider.publicKey;
+
+    const { blockhash } =
+      await connection.getLatestBlockhash();
+
+    transaction.recentBlockhash = blockhash;
+
+    const signed =
+      await provider.signTransaction(transaction);
+
+    const signature =
+      await connection.sendRawTransaction(
+        signed.serialize()
+      );
+
+    await connection.confirmTransaction(signature);
 
     claimedBalance += rewards;
 
@@ -108,6 +146,11 @@ async function claimRewards() {
       rewards.toFixed(9) + " VLX";
 
     statusEl.textContent = "Rewards Claimed";
+
+    window.open(
+      `https://solscan.io/tx/${signature}`,
+      "_blank"
+    );
 
   } catch (err) {
     statusEl.textContent = "Claim Cancelled";

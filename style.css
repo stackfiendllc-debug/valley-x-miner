@@ -1,28 +1,41 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: #000;
+  background:
+    radial-gradient(circle at top, #1a1408 0%, #000 60%);
   color: white;
   text-align: center;
 }
 
 .hero {
-  padding: 30px 20px;
+  padding: 35px 20px;
 }
 
 .logo {
-  width: 180px;
+  width: 190px;
   max-width: 80%;
   margin-bottom: 20px;
+  filter: drop-shadow(0 0 18px #ffb347);
+  animation: glow 2.5s infinite alternate;
+}
+
+@keyframes glow {
+  from {
+    filter: drop-shadow(0 0 12px #ffb347);
+  }
+  to {
+    filter: drop-shadow(0 0 28px #ffd27f);
+  }
 }
 
 h1 {
   color: silver;
-  letter-spacing: 2px;
+  letter-spacing: 3px;
+  text-shadow: 0 0 10px rgba(255,255,255,0.25);
 }
 
 .subtitle {
-  color: #aaa;
+  color: #d8b46a;
 }
 
 .dashboard {
@@ -32,22 +45,34 @@ h1 {
 }
 
 .dashboard-card {
-  background: #111;
-  border: 2px solid silver;
-  border-radius: 18px;
-  padding: 30px;
+  background: rgba(20,20,20,0.95);
+  border: 2px solid #c0c0c0;
+  border-radius: 20px;
+  padding: 35px;
   width: 90%;
-  max-width: 500px;
-  box-shadow: 0 0 25px rgba(255,255,255,0.08);
+  max-width: 520px;
+  box-shadow:
+    0 0 18px rgba(255,191,0,0.12),
+    inset 0 0 25px rgba(255,255,255,0.03);
+}
+
+.status-bar {
+  height: 4px;
+  background: linear-gradient(90deg, silver, #ffb347, silver);
+  border-radius: 20px;
+  margin-bottom: 20px;
 }
 
 .stat {
   margin: 20px 0;
+  padding: 15px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.03);
 }
 
 label {
   display: block;
-  color: #999;
+  color: #b0b0b0;
   margin-bottom: 8px;
 }
 
@@ -62,26 +87,31 @@ span {
 
 button {
   width: 220px;
-  padding: 14px;
+  padding: 15px;
   margin: 10px;
   border: none;
-  border-radius: 12px;
+  border-radius: 14px;
   font-size: 16px;
   cursor: pointer;
+  transition: 0.3s ease;
 }
 
 .connect-btn {
-  background: silver;
+  background: linear-gradient(45deg, silver, #fff);
   color: black;
 }
 
 .mine-btn {
-  background: #222;
-  color: silver;
-  border: 1px solid silver;
+  background: linear-gradient(45deg, #1f1f1f, #444);
+  color: #ffcc70;
+  border: 1px solid #ffcc70;
+}
+
+button:hover {
+  transform: scale(1.05);
 }
 
 footer {
   margin-top: 30px;
-  color: #777;
+  color: #999;
 }

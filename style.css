@@ -1,107 +1,51 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 body {
-  background: #000;
+  margin: 0;
   font-family: Arial, sans-serif;
+  background: #0a0a0a;
   color: white;
   text-align: center;
 }
 
-.app-container {
+header {
   padding: 30px 20px;
+  background: #111;
 }
 
 .logo {
-  width: 240px;
-  max-width: 85%;
-  margin: auto;
-  display: block;
-  filter: drop-shadow(0 0 18px rgba(255,170,50,.35));
-}
-
-h1 {
-  color: #d9d9d9;
-  margin-top: 15px;
-}
-
-.subtitle {
-  color: #c89b3c;
-  margin-bottom: 30px;
+  width: 120px;
+  margin-bottom: 15px;
 }
 
 .dashboard {
-  background: #111;
-  border: 1px solid #7a5a22;
-  border-radius: 20px;
-  padding: 30px;
-  max-width: 430px;
+  padding: 30px 20px;
+}
+
+.wallet-box {
+  background: #181818;
+  border: 2px solid #ff0000;
+  border-radius: 12px;
+  padding: 20px;
+  max-width: 400px;
   margin: auto;
 }
 
-.balance-box h2 {
-  color: #aaa;
-}
-
-#balance {
-  font-size: 2.2rem;
-  color: #ffb84d;
-  margin: 10px 0 25px;
-}
-
-.wallet-dashboard {
-  background: #181818;
-  border-radius: 14px;
-  padding: 18px;
-  margin-bottom: 20px;
-}
-
-.stat {
-  display: flex;
-  justify-content: space-between;
-  margin: 10px 0;
-  color: #bbb;
-}
-
-.stat strong {
-  color: #ffb84d;
-}
-
 button {
-  width: 100%;
-  padding: 15px;
-  margin: 10px 0;
-  background: linear-gradient(145deg,#1e1e1e,#2b2b2b);
-  color: #ffb84d;
-  border: 1px solid #7a5a22;
-  border-radius: 14px;
-  font-weight: bold;
+  background: #ff0000;
+  color: white;
+  border: none;
+  padding: 15px 25px;
+  margin: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
 }
 
-#miningPulse {
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background: #444;
-  margin: 20px auto;
-  transition: .3s ease;
+button:hover {
+  background: #cc0000;
 }
 
-.mining-active {
-  background: #ffb84d;
-  box-shadow: 0 0 25px #ffb84d;
-  animation: pulse 1s infinite;
-}
-
-@keyframes pulse {
-  0% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.4); opacity: .6; }
-  100% { transform: scale(1); opacity: 1; }
-}
-
-#status {
-  color: #aaa;
+footer {
+  margin-top: 40px;
+  padding: 20px;
+  color: #777;
 }

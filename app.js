@@ -1,5 +1,5 @@
 const SUPABASE_URL = "https://vjalivzqoiqnuadbkrce.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZqYWxpdnpxb2lxbnVhZGJrcmNlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAxMTI5NDMsImV4cCI6MjA5NTY4ODk0M30.nIh-u0GHpQkBPQWLN7UKETagAJOoaIbVml3TCtEJpoE";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZqYWxpdnpxb2lxbnVhZGJrcmNlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAxMTI5NDMsImV4cCI6MjA5NTY4ODk0M30.nIh-u0GHpQWLN7UKETagAJOoaIbVml3TCtEJpoE";
 
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -17,17 +17,29 @@ const statusDisplay = document.getElementById("status");
 const MINING_RATE = 0.000000050;
 const MINING_INTERVAL = 30000;
 
+// FIXED PHANTOM CONNECT
 connectBtn.onclick = async () => {
-  if ("solana" in window) {
-    const resp = await window.solana.connect();
+  try {
+    const provider = window.phantom?.solana || window.solana;
+
+    if (!provider || !provider.isPhantom) {
+      alert("Open inside Phantom Browser");
+      return;
+    }
+
+    const resp = await provider.connect();
     walletAddress = resp.publicKey.toString();
 
     walletDisplay.innerText =
       walletAddress.slice(0, 6) + "..." + walletAddress.slice(-4);
 
+    statusDisplay.innerText = "Wallet Connected";
+
     await loadMiner();
-  } else {
-    alert("Open inside Phantom Browser");
+
+  } catch (err) {
+    console.error(err);
+    alert("Wallet connection failed");
   }
 };
 
@@ -41,14 +53,7 @@ async function loadMiner() {
   if (data) {
     rewards = Number(data.rewards || 0);
     isMining = data.mining || false;
-
     updateBalance();
-
-    if (isMining) {
-      startMining();
-    } else {
-      statusDisplay.innerText = "Ready";
-    }
   } else {
     await supabase.from("miners").insert([
       {
@@ -57,8 +62,6 @@ async function loadMiner() {
         mining: false
       }
     ]);
-
-    statusDisplay.innerText = "Ready";
   }
 }
 
@@ -76,11 +79,11 @@ mineBtn.onclick = async () => {
 };
 
 function startMining() {
-  if (miningInterval) clearInterval(miningInterval);
-
   isMining = true;
   mineBtn.innerText = "Stop Mining";
   statusDisplay.innerText = "Mining Live";
+
+  if (miningInterval) clearInterval(miningInterval);
 
   miningInterval = setInterval(async () => {
     rewards += MINING_RATE;
@@ -91,8 +94,8 @@ function startMining() {
 
 function stopMining() {
   clearInterval(miningInterval);
-
   isMining = false;
+
   mineBtn.innerText = "Start Mining";
   statusDisplay.innerText = "Mining Stopped";
 
@@ -107,7 +110,7 @@ async function saveMiner() {
   await supabase
     .from("miners")
     .update({
-      rewards: rewards,
+      rewards,
       mining: isMining
     })
     .eq("wallet", walletAddress);
@@ -126,10 +129,6 @@ async function claimRewards() {
 
   await supabase
     .from("miners")
-    .update({
-      rewards: 0
-    })
+    .update({ rewards: 0 })
     .eq("wallet", walletAddress);
-
-  statusDisplay.innerText = "Claimed";
 }

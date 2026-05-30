@@ -1,34 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>VLX Miner</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Valley X Miner</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <div class="container">
-    <img
-      src="./logo.jpeg"
-      alt="VLX Logo"
+<div class="app-container">
+
+    <img 
+      src="./logo.png" 
+      alt="VLX Logo" 
       class="logo"
-      onerror="this.src='logo.jpeg'"
-    />
+      onerror="this.style.display='none'"
+    >
 
     <h1>VALLEY X MINER</h1>
+    <p class="subtitle">Mine Valley X Token</p>
 
-    <div class="card">
-      <h2 id="balance">0.00 VLX</h2>
-      <p id="status">Connect wallet to begin</p>
+    <div class="dashboard">
 
-      <button id="walletBtn">Connect Phantom</button>
-      <button id="mineBtn">Start Mining</button>
+        <div class="balance-box">
+            <h2>VLX Earned</h2>
+            <p id="balance">0.00 VLX</p>
+        </div>
+
+        <button id="walletBtn">Connect Phantom</button>
+        <button id="mineBtn">Start Mining</button>
+
+        <p id="status">Connect wallet to begin</p>
+
     </div>
-  </div>
 
-  <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
-  <script src="script.js"></script>
+</div>
+
+<script src="script.js"></script>
 
 </body>
 </html>

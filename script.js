@@ -9,6 +9,11 @@ const walletBtn = document.getElementById("walletBtn");
 const statusEl = document.getElementById("status");
 
 function updateBalance() {
+  if (!walletConnected) {
+    balanceEl.textContent = "0.00 VLX";
+    return;
+  }
+
   balanceEl.textContent = balance.toFixed(2) + " VLX";
 }
 
@@ -19,9 +24,7 @@ function getWalletKey(address) {
 function mine() {
   if (mining && walletConnected) {
     balance += 0.25;
-
     localStorage.setItem(getWalletKey(walletAddress), balance);
-
     updateBalance();
   }
 }
@@ -34,13 +37,13 @@ mineBtn.addEventListener("click", () => {
 
   mining = !mining;
 
-  if (mining) {
-    mineBtn.textContent = "Stop Mining";
-    statusEl.textContent = "Mining active...";
-  } else {
-    mineBtn.textContent = "Start Mining";
-    statusEl.textContent = "Mining paused";
-  }
+  mineBtn.textContent = mining
+    ? "Stop Mining"
+    : "Start Mining";
+
+  statusEl.textContent = mining
+    ? "Mining active..."
+    : "Mining paused";
 });
 
 walletBtn.addEventListener("click", async () => {
@@ -57,10 +60,11 @@ walletBtn.addEventListener("click", async () => {
 
       walletBtn.textContent = "Connected";
       statusEl.textContent =
-        walletAddress.slice(0, 6) + "..." + walletAddress.slice(-4);
+        walletAddress.slice(0, 6) +
+        "..." +
+        walletAddress.slice(-4);
 
       updateBalance();
-
     } catch (err) {
       statusEl.textContent = "Connection failed";
     }

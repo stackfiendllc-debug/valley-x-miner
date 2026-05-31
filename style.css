@@ -1,49 +1,24 @@
 body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #000;
-  color: #fff;
-  text-align: center;
-}
-
-.container {
-  padding: 30px;
-}
-
-.logo {
-  width: 180px;
-  margin-bottom: 20px;
-  transition: 0.5s;
-}
-
-.logo.mining {
-  animation: glow 1.2s infinite alternate;
-}
-
-@keyframes glow {
-  from {
-    filter: drop-shadow(0 0 5px red);
-  }
-  to {
-    filter: drop-shadow(0 0 25px red);
-  }
+    background: #000;
+    color: #f5b400;
 }
 
 button {
-  background: #b30000;
-  color: white;
-  border: none;
-  padding: 14px 24px;
-  margin: 8px;
-  border-radius: 10px;
-  font-size: 16px;
+    background: linear-gradient(135deg, #f5b400, #ff8c00);
+    color: black;
 }
 
-.stats {
-  margin: 20px 0;
-  font-size: 20px;
+#logo {
+    width: 220px;
+    filter: drop-shadow(0 0 20px #f5b400);
 }
 
-.wallet-box {
-  margin-bottom: 20px;
+.mining-glow {
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { filter: drop-shadow(0 0 10px gold); }
+    50% { filter: drop-shadow(0 0 30px orange); }
+    100% { filter: drop-shadow(0 0 10px gold); }
 }

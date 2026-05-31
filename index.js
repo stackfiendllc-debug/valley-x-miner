@@ -6,10 +6,10 @@ const CLAIM_MINIMUM = 1;
 const REWARD_RATE = 0.00012;
 
 const SUPABASE_URL =
-    "https://vjalivzqoiqnuadbkrce.supabase.co";
+"https://vjalivzqoiqnuadbkrce.supabase.co";
 
 const SUPABASE_ANON =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZqYWxpdnpxb2lxbnVhZGJrcmNlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAxMTI5NDMsImV4cCI6MjA5NTY4ODk0M30.nIh-u0GHpQkBPQWLN7UKETagAJOoaIbVml3TCtEJpoE";
+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZqYWxpdnpxb2lxbnVhZGJrcmNlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAxMTI5NDMsImV4cCI6MjA5NTY4ODk0M30.nIh-u0GHpQkBPQWLN7UKETagAJOoaIbVml3TCtEJpoE";
 
 let reward = parseFloat(localStorage.getItem("vlxReward")) || 0;
 
@@ -23,15 +23,17 @@ const connectBtn = document.getElementById("connectBtn");
 rewardDisplay.innerText = reward.toFixed(6);
 
 async function connectWallet() {
-    if (!window.solana?.isPhantom) {
-        alert("Please install Phantom Wallet");
+    if (!window.solana) {
+        alert("Open inside Phantom Browser");
         return;
     }
 
     try {
-        const res = await window.solana.connect();
+        const response = await window.solana.connect({
+            onlyIfTrusted: false
+        });
 
-        wallet = res.publicKey.toString();
+        wallet = response.publicKey.toString();
 
         localStorage.setItem("vlxWallet", wallet);
 
@@ -66,14 +68,10 @@ function startMining() {
     miningInterval = setInterval(() => {
         reward += REWARD_RATE;
 
-        const hash =
-            Math.floor(Math.random() * 900 + 1100);
+        const hash = Math.floor(Math.random() * 900 + 1100);
 
-        rewardDisplay.innerText =
-            reward.toFixed(6);
-
-        hashRate.innerText =
-            hash + " H/s";
+        rewardDisplay.innerText = reward.toFixed(6);
+        hashRate.innerText = hash + " H/s";
 
         saveReward();
 
@@ -99,7 +97,7 @@ async function claimVLX() {
     }
 
     if (reward < CLAIM_MINIMUM) {
-        alert(`Minimum ${CLAIM_MINIMUM} VLX required`);
+        alert("Minimum 1 VLX required");
         return;
     }
 
@@ -145,16 +143,24 @@ async function claimVLX() {
 }
 
 window.onload = async () => {
-    const savedWallet =
-        localStorage.getItem("vlxWallet");
+    rewardDisplay.innerText = reward.toFixed(6);
 
-    if (savedWallet) {
-        wallet = savedWallet;
+    if (window.solana) {
+        try {
+            const response = await window.solana.connect({
+                onlyIfTrusted: true
+            });
 
-        walletAddress.innerText =
-            wallet.slice(0, 6) + "..." + wallet.slice(-4);
+            wallet = response.publicKey.toString();
 
-        connectBtn.innerText = "Connected";
-        status.innerText = "READY";
+            walletAddress.innerText =
+                wallet.slice(0, 6) + "..." + wallet.slice(-4);
+
+            connectBtn.innerText = "Connected";
+            status.innerText = "READY";
+
+        } catch {
+            status.innerText = "IDLE";
+        }
     }
 };

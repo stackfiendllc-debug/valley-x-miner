@@ -1,24 +1,96 @@
-body {
-    background: #000;
-    color: #f5b400;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
 }
 
-button {
-    background: linear-gradient(135deg, #f5b400, #ff8c00);
-    color: black;
+body {
+  background: #050505;
+  color: #fff;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.app-shell {
+  width: 100%;
+  max-width: 430px;
+  background: #101010;
+  border-radius: 24px;
+  overflow: hidden;
+  border: 2px solid #d4af37;
+  box-shadow: 0 0 30px rgba(212,175,55,0.25);
+}
+
+.topbar {
+  text-align: center;
+  padding: 30px 20px;
+  background: #141414;
 }
 
 #logo {
-    width: 220px;
-    filter: drop-shadow(0 0 20px #f5b400);
+  width: 120px;
+  display: block;
+  margin: 0 auto 15px;
 }
 
-.mining-glow {
-    animation: pulse 1.5s infinite;
+.topbar h1 {
+  font-size: 28px;
+  color: #d4af37;
 }
 
-@keyframes pulse {
-    0% { filter: drop-shadow(0 0 10px gold); }
-    50% { filter: drop-shadow(0 0 30px orange); }
-    100% { filter: drop-shadow(0 0 10px gold); }
+.dashboard {
+  padding: 25px;
+}
+
+.wallet-panel,
+.mining-panel,
+.status-panel {
+  background: #181818;
+  border-radius: 18px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+h2, h3 {
+  margin-bottom: 12px;
+}
+
+#walletText,
+#balanceText {
+  color: #d4af37;
+  font-weight: bold;
+  word-break: break-all;
+}
+
+.balance-display {
+  font-size: 26px;
+  text-align: center;
+  margin: 20px 0;
+}
+
+button {
+  width: 100%;
+  padding: 16px;
+  margin-top: 12px;
+  border: none;
+  border-radius: 14px;
+  background: #d4af37;
+  color: #000;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.4;
+}
+
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }

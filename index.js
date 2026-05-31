@@ -8,14 +8,22 @@ document.getElementById("rewardDisplay").innerText =
     reward.toFixed(6) + " VLX";
 
 async function connectWallet() {
-    if (window.solana?.isPhantom) {
+    if (!window.solana?.isPhantom) {
+        alert("Install Phantom Wallet");
+        return;
+    }
+
+    try {
         const response = await window.solana.connect();
         wallet = response.publicKey.toString();
 
+        localStorage.setItem("vlxWallet", wallet);
+
         document.getElementById("walletAddress").innerText =
             wallet.slice(0, 6) + "..." + wallet.slice(-4);
-    } else {
-        alert("Install Phantom Wallet");
+
+    } catch {
+        alert("Wallet connection failed");
     }
 }
 
@@ -24,9 +32,15 @@ function saveReward() {
 }
 
 function startMining() {
+    if (!wallet) {
+        alert("Connect wallet first");
+        return;
+    }
+
     if (mining) return;
 
     mining = true;
+
     document.getElementById("logo").classList.add("mining");
 
     miningInterval = setInterval(() => {
@@ -40,18 +54,25 @@ function startMining() {
 
         document.getElementById("hashRate").innerText =
             hash + " H/s";
+
     }, 1000);
 }
 
 function stopMining() {
     mining = false;
     clearInterval(miningInterval);
+
     document.getElementById("logo").classList.remove("mining");
 }
 
 async function claimVLX() {
     if (!wallet) {
         alert("Connect wallet first");
+        return;
+    }
+
+    if (reward <= 0) {
+        alert("No VLX available to claim");
         return;
     }
 
@@ -64,13 +85,15 @@ async function claimVLX() {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    wallet,
-                    amount: reward
+                    wallet: wallet,
+                    amount: Number(reward.toFixed(6))
                 })
             }
         );
 
         const data = await response.json();
+
+        console.log(data);
 
         if (response.ok) {
             alert("VLX Claimed Successfully");
@@ -80,12 +103,13 @@ async function claimVLX() {
 
             document.getElementById("rewardDisplay").innerText =
                 "0.000000 VLX";
+
         } else {
             alert(data.error || "Claim failed");
         }
 
     } catch (err) {
         console.error(err);
-        alert("Failed to fetch claim function");
+        alert("Claim function error");
     }
 }

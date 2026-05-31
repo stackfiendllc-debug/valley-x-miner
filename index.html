@@ -8,38 +8,44 @@
 </head>
 <body>
 
-  <div class="container">
+<div class="app-shell">
 
-    <img id="logo" src="logo.png" alt="VLX Logo" class="logo">
-
+  <header class="topbar">
+    <img id="logo" src="logo.png" alt="Valley X Logo">
     <h1>Valley X Miner</h1>
-    <p class="subtitle">Mine and Claim VLX</p>
+  </header>
 
-    <div class="wallet-card">
-      <h3>Wallet</h3>
+  <main class="dashboard">
+
+    <section class="wallet-panel">
+      <h3>Connected Wallet</h3>
       <p id="walletText">Not Connected</p>
-    </div>
-
-    <div class="balance-card">
-      <h2>Available VLX</h2>
-      <p id="balanceText">0.000000000 VLX</p>
-    </div>
-
-    <div class="button-group">
       <button id="connectBtn">Connect Phantom</button>
-      <button id="mineBtn">Start Mining</button>
-      <button id="claimBtn">Claim VLX</button>
-    </div>
+    </section>
 
-    <div class="info-box">
-      <p>Mining runs every 30 seconds</p>
-      <p>Minimum claim: 0.01 VLX</p>
-    </div>
+    <section class="mining-panel">
+      <h2>Your VLX Balance</h2>
+      <div class="balance-display">
+        <span id="balanceText">0.000000000 VLX</span>
+      </div>
 
-  </div>
+      <div class="action-buttons">
+        <button id="mineBtn">Start Mining</button>
+        <button id="claimBtn">Claim VLX</button>
+      </div>
+    </section>
 
-  <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js"></script>
-  <script src="app.js"></script>
+    <section class="status-panel">
+      <p>Mining interval: 30 seconds</p>
+      <p>Minimum Claim: 0.01 VLX</p>
+    </section>
+
+  </main>
+
+</div>
+
+<script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js"></script>
+<script src="app.js"></script>
 
 </body>
 </html>

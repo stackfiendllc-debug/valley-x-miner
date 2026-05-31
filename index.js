@@ -1,28 +1,22 @@
-let provider = null;
 let walletAddress = null;
-let miningInterval = null;
+let mining = false;
 let reward = 0;
+let interval = null;
 
 async function connectWallet() {
   try {
-    if (!window.solana || !window.solana.isPhantom) {
-      alert("Install Phantom Wallet");
-      return;
-    }
-
-    provider = window.solana;
-    const response = await provider.connect();
-
-    walletAddress = response.publicKey.toString();
+    const resp = await window.solana.connect();
+    walletAddress = resp.publicKey.toString();
 
     document.getElementById("wallet").innerText =
-      walletAddress.slice(0, 6) +
-      "..." +
-      walletAddress.slice(-4);
+      walletAddress.slice(0,6) + "..." + walletAddress.slice(-4);
 
-  } catch (err) {
-    alert("Wallet connection canceled");
-    console.error(err);
+    document.getElementById("status").innerText =
+      "Connected";
+
+  } catch {
+    document.getElementById("status").innerText =
+      "Connection Failed";
   }
 }
 
@@ -32,29 +26,36 @@ function startMining() {
     return;
   }
 
-  if (miningInterval) return;
+  if (mining) return;
 
-  miningInterval = setInterval(() => {
-    reward += 0.001;
+  mining = true;
+
+  interval = setInterval(() => {
+    reward += 0.000000050;
 
     document.getElementById("rewardDisplay").innerText =
-      reward.toFixed(6) + " VLX";
+      reward.toFixed(9) + " VLX";
+
   }, 1000);
+
+  document.getElementById("status").innerText =
+    "Mining Active";
 }
 
 function stopMining() {
-  clearInterval(miningInterval);
-  miningInterval = null;
+  clearInterval(interval);
+  mining = false;
+
+  document.getElementById("status").innerText =
+    "Mining Stopped";
 }
 
 async function claimVLX() {
-  if (reward <= 0) {
-    alert("No VLX to claim");
-    return;
-  }
-
   try {
-    const response = await fetch(
+    document.getElementById("status").innerText =
+      "Processing Claim...";
+
+    const res = await fetch(
       "https://vjalivzqoiqnuadbkrce.supabase.co/functions/v1/claim-vlx",
       {
         method: "POST",
@@ -68,21 +69,20 @@ async function claimVLX() {
       }
     );
 
-    const data = await response.json();
+    const data = await res.json();
 
-    if (data.signature) {
-      alert("Claim Successful\nTX: " + data.signature);
+    alert("Claim Success");
 
-      reward = 0;
+    reward = 0;
 
-      document.getElementById("rewardDisplay").innerText =
-        "0.000000 VLX";
-    } else {
-      alert("Claim canceled");
-    }
+    document.getElementById("rewardDisplay").innerText =
+      "0.000000000 VLX";
+
+    document.getElementById("status").innerText =
+      data.signature || "Claim Complete";
 
   } catch (err) {
-    alert("Claim failed");
-    console.error(err);
+    document.getElementById("status").innerText =
+      "Claim Failed";
   }
 }

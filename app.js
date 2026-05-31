@@ -1,107 +1,98 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: Arial, sans-serif;
-}
+document.addEventListener("DOMContentLoaded", () => {
+  const CLAIM_URL = "https://vjalivzqoiqnuadbkrce.supabase.co/functions/v1/claim-vlx";
 
-body {
-  background: #05070d;
-  color: white;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 15px;
-}
+  let wallet = localStorage.getItem("wallet") || null;
+  let balance = parseFloat(localStorage.getItem("vlxBalance")) || 0;
+  let mining = false;
+  let hash = 0;
 
-.app-shell {
-  width: 100%;
-  max-width: 410px;
-  background: rgba(12,18,30,0.95);
-  border: 1px solid rgba(255,215,0,0.25);
-  border-radius: 24px;
-  padding: 22px;
-  box-shadow: 0 0 35px rgba(255,215,0,0.12);
-  backdrop-filter: blur(12px);
-}
+  const connectBtn = document.getElementById("connectBtn");
+  const mineBtn = document.getElementById("mineBtn");
+  const claimBtn = document.getElementById("claimBtn");
 
-.topbar {
-  text-align: center;
-  margin-bottom: 22px;
-}
+  const walletText = document.getElementById("walletText");
+  const balanceText = document.getElementById("balanceText");
+  const hashRate = document.getElementById("hashRate");
+  const statusText = document.getElementById("statusText");
 
-#logo {
-  width: 82px;
-  height: auto;
-  display: block;
-  margin: 0 auto 14px;
-}
+  function updateUI() {
+    walletText.textContent = wallet
+      ? wallet.slice(0, 8) + "..." + wallet.slice(-6)
+      : "Not Connected";
 
-.topbar h1 {
-  font-size: 26px;
-  color: #ffd700;
-}
+    balanceText.textContent = balance.toFixed(9) + " VLX";
+    hashRate.textContent = hash + " H/s";
 
-.subtitle {
-  color: #8fa3bf;
-  font-size: 14px;
-}
+    claimBtn.disabled = balance < 0.01;
+    mineBtn.disabled = !wallet;
+  }
 
-.wallet-card,
-.mining-card,
-.status-card {
-  background: rgba(20,28,44,0.9);
-  border-radius: 18px;
-  padding: 18px;
-  margin-bottom: 16px;
-  border: 1px solid rgba(255,215,0,0.08);
-}
+  async function connectWallet() {
+    if (!window.solana?.isPhantom) {
+      alert("Open inside Phantom browser");
+      return;
+    }
 
-h3 {
-  margin-bottom: 12px;
-  color: #ffd700;
-}
+    try {
+      const resp = await window.solana.connect();
+      wallet = resp.publicKey.toString();
+      localStorage.setItem("wallet", wallet);
+      updateUI();
+    } catch {
+      alert("Connection failed");
+    }
+  }
 
-#walletText,
-#balanceText,
-#hashRate,
-#statusText {
-  word-break: break-word;
-  font-weight: bold;
-}
+  function startMining() {
+    if (mining) return;
 
-#balanceText {
-  font-size: 24px;
-  text-align: center;
-  margin: 16px 0;
-  color: #ffd700;
-}
+    mining = true;
+    statusText.textContent = "Mining";
 
-.hash-box {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 18px;
-  color: #8fa3bf;
-}
+    setInterval(() => {
+      hash = Math.floor(Math.random() * 900 + 100);
+      balance += 0.00005;
 
-button {
-  width: 100%;
-  padding: 15px;
-  margin-top: 10px;
-  border: none;
-  border-radius: 14px;
-  background: linear-gradient(135deg, #ffd700, #c89b00);
-  color: #000;
-  font-weight: bold;
-  font-size: 15px;
-  cursor: pointer;
-}
+      localStorage.setItem("vlxBalance", balance);
+      updateUI();
+    }, 30000);
+  }
 
-button:disabled {
-  opacity: .4;
-}
+  async function claimVLX() {
+    try {
+      statusText.textContent = "Claiming";
 
-button:active {
-  transform: scale(.98);
-}
+      const res = await fetch(CLAIM_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer public"
+        },
+        body: JSON.stringify({
+          wallet,
+          amount: balance
+        })
+      });
+
+      if (!res.ok) throw new Error();
+
+      balance = 0;
+      localStorage.setItem("vlxBalance", 0);
+
+      statusText.textContent = "Claimed";
+      updateUI();
+
+      alert("VLX claimed successfully");
+
+    } catch {
+      statusText.textContent = "Claim Failed";
+      alert("Claim failed");
+    }
+  }
+
+  connectBtn.onclick = connectWallet;
+  mineBtn.onclick = startMining;
+  claimBtn.onclick = claimVLX;
+
+  updateUI();
+});

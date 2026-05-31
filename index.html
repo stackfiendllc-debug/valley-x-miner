@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Valley X Miner</title>
+<link rel="stylesheet" href="style.css" />
+<script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js"></script>
+</head>
+<body>
+
+<div class="app">
+
+    <img src="logo.png" id="logo" />
+
+    <h1>VALLEY X MINER</h1>
+    <p class="subtitle">Decentralized Hash Engine</p>
+
+    <div class="wallet-box">
+        <span id="walletAddress">Not Connected</span>
+    </div>
+
+    <div class="stats">
+
+        <div class="card">
+            <label>Hash Rate</label>
+            <h2 id="hashRate">0 H/s</h2>
+        </div>
+
+        <div class="card">
+            <label>Mined VLX</label>
+            <h2 id="rewardDisplay">0.000000</h2>
+        </div>
+
+        <div class="card">
+            <label>Status</label>
+            <h2 id="status">IDLE</h2>
+        </div>
+
+    </div>
+
+    <div class="buttons">
+        <button id="connectBtn" onclick="connectWallet()">Connect Wallet</button>
+        <button onclick="startMining()">Start Mining</button>
+        <button onclick="stopMining()">Stop Mining</button>
+        <button onclick="claimVLX()">Claim VLX</button>
+    </div>
+
+</div>
+
+<script src="index.js"></script>
+</body>
+</html>

@@ -1,105 +1,107 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const SUPABASE_URL = "https://vjalivzqoiqnuadbkrce.supabase.co";
-  const CLAIM_URL = `${SUPABASE_URL}/functions/v1/claim-vlx`;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
 
-  const MIN_CLAIM = 0.01;
-  const MINE_RATE = 0.00005;
+body {
+  background: #05070d;
+  color: white;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+}
 
-  let wallet = localStorage.getItem("wallet") || null;
-  let minedVLX = parseFloat(localStorage.getItem("vlxBalance")) || 0;
-  let mining = false;
+.app-shell {
+  width: 100%;
+  max-width: 410px;
+  background: rgba(12,18,30,0.95);
+  border: 1px solid rgba(255,215,0,0.25);
+  border-radius: 24px;
+  padding: 22px;
+  box-shadow: 0 0 35px rgba(255,215,0,0.12);
+  backdrop-filter: blur(12px);
+}
 
-  const connectBtn = document.getElementById("connectBtn");
-  const mineBtn = document.getElementById("mineBtn");
-  const claimBtn = document.getElementById("claimBtn");
-  const walletText = document.getElementById("walletText");
-  const balanceText = document.getElementById("balanceText");
-  const logo = document.getElementById("logo");
+.topbar {
+  text-align: center;
+  margin-bottom: 22px;
+}
 
-  function updateUI() {
-    walletText.textContent = wallet
-      ? `${wallet.slice(0, 6)}...${wallet.slice(-4)}`
-      : "Not Connected";
+#logo {
+  width: 82px;
+  height: auto;
+  display: block;
+  margin: 0 auto 14px;
+}
 
-    balanceText.textContent = `${minedVLX.toFixed(9)} VLX`;
+.topbar h1 {
+  font-size: 26px;
+  color: #ffd700;
+}
 
-    mineBtn.disabled = !wallet;
-    claimBtn.disabled = !wallet || minedVLX < MIN_CLAIM;
-  }
+.subtitle {
+  color: #8fa3bf;
+  font-size: 14px;
+}
 
-  async function connectWallet() {
-    try {
-      if (!window.solana) {
-        alert("Open this inside Phantom browser");
-        return;
-      }
+.wallet-card,
+.mining-card,
+.status-card {
+  background: rgba(20,28,44,0.9);
+  border-radius: 18px;
+  padding: 18px;
+  margin-bottom: 16px;
+  border: 1px solid rgba(255,215,0,0.08);
+}
 
-      const resp = await window.solana.connect();
-      wallet = resp.publicKey.toString();
+h3 {
+  margin-bottom: 12px;
+  color: #ffd700;
+}
 
-      localStorage.setItem("wallet", wallet);
+#walletText,
+#balanceText,
+#hashRate,
+#statusText {
+  word-break: break-word;
+  font-weight: bold;
+}
 
-      updateUI();
-    } catch (err) {
-      console.error(err);
-      alert("Phantom connection failed");
-    }
-  }
+#balanceText {
+  font-size: 24px;
+  text-align: center;
+  margin: 16px 0;
+  color: #ffd700;
+}
 
-  function startMining() {
-    if (!wallet) {
-      alert("Connect wallet first");
-      return;
-    }
+.hash-box {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 18px;
+  color: #8fa3bf;
+}
 
-    if (mining) return;
+button {
+  width: 100%;
+  padding: 15px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #ffd700, #c89b00);
+  color: #000;
+  font-weight: bold;
+  font-size: 15px;
+  cursor: pointer;
+}
 
-    mining = true;
+button:disabled {
+  opacity: .4;
+}
 
-    if (logo) logo.classList.add("mining-glow");
-
-    setInterval(() => {
-      minedVLX += MINE_RATE;
-      localStorage.setItem("vlxBalance", minedVLX);
-      updateUI();
-    }, 30000);
-  }
-
-  async function claimVLX() {
-    if (minedVLX < MIN_CLAIM) {
-      alert(`Minimum claim is ${MIN_CLAIM} VLX`);
-      return;
-    }
-
-    try {
-      const res = await fetch(CLAIM_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer public"
-        },
-        body: JSON.stringify({
-          wallet,
-          amount: minedVLX
-        })
-      });
-
-      if (!res.ok) throw new Error("Claim failed");
-
-      minedVLX = 0;
-      localStorage.setItem("vlxBalance", 0);
-
-      alert("Claim successful");
-      updateUI();
-
-    } catch (err) {
-      alert(err.message);
-    }
-  }
-
-  connectBtn.addEventListener("click", connectWallet);
-  mineBtn.addEventListener("click", startMining);
-  claimBtn.addEventListener("click", claimVLX);
-
-  updateUI();
-});
+button:active {
+  transform: scale(.98);
+}

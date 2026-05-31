@@ -1,49 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Valley X Miner</title>
-  <link rel="stylesheet" href="styles.css"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valley X Miner</title>
+<link rel="stylesheet" href="./styles.css?v=2">
 </head>
-<body>
 
+<body>
 <div class="app-shell">
 
-  <header class="topbar">
-    <img id="logo" src="logo.png" alt="VLX Logo">
-    <h1>VALLEY X</h1>
-    <p class="subtitle">Future Mining Protocol</p>
-  </header>
+<header class="topbar">
+<img src="./logo.png" id="logo">
+<h1>VALLEY X</h1>
+<p>Future Mining Protocol</p>
+</header>
 
-  <section class="wallet-card">
-    <h3>Connected Wallet</h3>
-    <p id="walletText">Not Connected</p>
-    <button id="connectBtn">Connect Phantom</button>
-  </section>
+<section class="card">
+<h3>Connected Wallet</h3>
+<p id="walletText">Not Connected</p>
+<button id="connectBtn">Connect Phantom</button>
+</section>
 
-  <section class="mining-card">
-    <h3>VLX Balance</h3>
-    <div id="balanceText">0.000000000 VLX</div>
+<section class="card">
+<h3>VLX Balance</h3>
+<div id="balanceText">0.000000000 VLX</div>
+<div class="hash-row">
+<span>Hash Rate</span>
+<span id="hashRate">0 H/s</span>
+</div>
 
-    <div class="hash-box">
-      <span>Hash Rate</span>
-      <span id="hashRate">0 H/s</span>
-    </div>
+<button id="mineBtn">Start Mining</button>
+<button id="claimBtn">Claim VLX</button>
+</section>
 
-    <button id="mineBtn">Start Mining</button>
-    <button id="claimBtn">Claim VLX</button>
-  </section>
-
-  <section class="status-card">
-    <p>Status: <span id="statusText">Idle</span></p>
-    <p>Minimum Claim: 0.01 VLX</p>
-  </section>
+<section class="card">
+<p>Status: <span id="statusText">Idle</span></p>
+<p>Minimum Claim: 0.01 VLX</p>
+</section>
 
 </div>
 
 <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js"></script>
-<script src="app.js"></script>
-
+<script src="./app.js?v=2"></script>
 </body>
 </html>

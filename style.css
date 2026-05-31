@@ -6,91 +6,102 @@
 }
 
 body {
-  background: #050505;
-  color: #fff;
+  background: #05070d;
+  color: white;
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px;
+  padding: 15px;
 }
 
 .app-shell {
   width: 100%;
-  max-width: 430px;
-  background: #101010;
+  max-width: 410px;
+  background: rgba(12,18,30,0.95);
+  border: 1px solid rgba(255,215,0,0.25);
   border-radius: 24px;
-  overflow: hidden;
-  border: 2px solid #d4af37;
-  box-shadow: 0 0 30px rgba(212,175,55,0.25);
+  padding: 22px;
+  box-shadow: 0 0 35px rgba(255,215,0,0.12);
+  backdrop-filter: blur(12px);
 }
 
 .topbar {
   text-align: center;
-  padding: 30px 20px;
-  background: #141414;
+  margin-bottom: 22px;
 }
 
 #logo {
-  width: 120px;
+  width: 82px;
+  height: auto;
   display: block;
-  margin: 0 auto 15px;
+  margin: 0 auto 14px;
 }
 
 .topbar h1 {
-  font-size: 28px;
-  color: #d4af37;
+  font-size: 26px;
+  color: #ffd700;
 }
 
-.dashboard {
-  padding: 25px;
+.subtitle {
+  color: #8fa3bf;
+  font-size: 14px;
 }
 
-.wallet-panel,
-.mining-panel,
-.status-panel {
-  background: #181818;
+.wallet-card,
+.mining-card,
+.status-card {
+  background: rgba(20,28,44,0.9);
   border-radius: 18px;
-  padding: 20px;
-  margin-bottom: 20px;
+  padding: 18px;
+  margin-bottom: 16px;
+  border: 1px solid rgba(255,215,0,0.08);
 }
 
-h2, h3 {
+h3 {
   margin-bottom: 12px;
+  color: #ffd700;
 }
 
 #walletText,
-#balanceText {
-  color: #d4af37;
+#balanceText,
+#hashRate,
+#statusText {
+  word-break: break-word;
   font-weight: bold;
-  word-break: break-all;
 }
 
-.balance-display {
-  font-size: 26px;
+#balanceText {
+  font-size: 24px;
   text-align: center;
-  margin: 20px 0;
+  margin: 16px 0;
+  color: #ffd700;
+}
+
+.hash-box {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 18px;
+  color: #8fa3bf;
 }
 
 button {
   width: 100%;
-  padding: 16px;
-  margin-top: 12px;
+  padding: 15px;
+  margin-top: 10px;
   border: none;
   border-radius: 14px;
-  background: #d4af37;
+  background: linear-gradient(135deg, #ffd700, #c89b00);
   color: #000;
   font-weight: bold;
-  font-size: 16px;
+  font-size: 15px;
   cursor: pointer;
 }
 
 button:disabled {
-  opacity: 0.4;
+  opacity: .4;
 }
 
-.action-buttons {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+button:active {
+  transform: scale(.98);
 }

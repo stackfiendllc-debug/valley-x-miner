@@ -1,88 +1,79 @@
-let walletAddress = null;
+let wallet = null;
 let mining = false;
 let reward = 0;
-let interval = null;
+let miningInterval;
 
 async function connectWallet() {
-  try {
-    const resp = await window.solana.connect();
-    walletAddress = resp.publicKey.toString();
+  if (window.solana && window.solana.isPhantom) {
+    const response = await window.solana.connect();
+    wallet = response.publicKey.toString();
 
-    document.getElementById("wallet").innerText =
-      walletAddress.slice(0,6) + "..." + walletAddress.slice(-4);
-
-    document.getElementById("status").innerText =
-      "Connected";
-
-  } catch {
-    document.getElementById("status").innerText =
-      "Connection Failed";
+    document.getElementById("walletAddress").innerText =
+      wallet.slice(0, 6) + "..." + wallet.slice(-4);
+  } else {
+    alert("Install Phantom Wallet");
   }
 }
 
 function startMining() {
-  if (!walletAddress) {
-    alert("Connect wallet first");
-    return;
-  }
-
   if (mining) return;
 
   mining = true;
 
-  interval = setInterval(() => {
-    reward += 0.000000050;
+  miningInterval = setInterval(() => {
+    reward += 0.00005;
+
+    const hash = Math.floor(Math.random() * 400 + 600);
 
     document.getElementById("rewardDisplay").innerText =
-      reward.toFixed(9) + " VLX";
+      reward.toFixed(6) + " VLX";
+
+    document.getElementById("hashRate").innerText =
+      hash + " H/s";
 
   }, 1000);
-
-  document.getElementById("status").innerText =
-    "Mining Active";
 }
 
 function stopMining() {
-  clearInterval(interval);
   mining = false;
-
-  document.getElementById("status").innerText =
-    "Mining Stopped";
+  clearInterval(miningInterval);
 }
 
 async function claimVLX() {
-  try {
-    document.getElementById("status").innerText =
-      "Processing Claim...";
+  if (!wallet) {
+    alert("Connect wallet first");
+    return;
+  }
 
-    const res = await fetch(
-      "https://vjalivzqoiqnuadbkrce.supabase.co/functions/v1/claim-vlx",
+  alert("Claim processing...");
+
+  try {
+    const response = await fetch(
+      "https://YOUR-SUPABASE-FUNCTION.supabase.co/functions/v1/claim",
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          wallet: walletAddress,
+          wallet,
           amount: reward
         })
       }
     );
 
-    const data = await res.json();
+    const data = await response.json();
 
-    alert("Claim Success");
-
-    reward = 0;
-
-    document.getElementById("rewardDisplay").innerText =
-      "0.000000000 VLX";
-
-    document.getElementById("status").innerText =
-      data.signature || "Claim Complete";
+    if (response.ok) {
+      alert("VLX Claimed Successfully");
+      reward = 0;
+      document.getElementById("rewardDisplay").innerText =
+        "0.000000 VLX";
+    } else {
+      alert(data.error || "Claim failed");
+    }
 
   } catch (err) {
-    document.getElementById("status").innerText =
-      "Claim Failed";
+    alert("Failed to fetch");
   }
 }

@@ -1,109 +1,43 @@
-let walletAddress = null;
-let minedBalance = 0;
-let claimedBalance = 0;
-let miningInterval = null;
-let mining = false;
-
 const connectBtn = document.getElementById("connectBtn");
 const mineBtn = document.getElementById("mineBtn");
 const claimBtn = document.getElementById("claimBtn");
 
-connectBtn.addEventListener("click", connectWallet);
-mineBtn.addEventListener("click", toggleMining);
-claimBtn.addEventListener("click", claimRewards);
+let wallet = null;
+let mining = false;
+let mined = 0;
 
-async function connectWallet() {
-  try {
-    const resp = await window.solana.connect();
-    walletAddress = resp.publicKey.toString();
+connectBtn.onclick = async () => {
+  const resp = await window.solana.connect();
+  wallet = resp.publicKey.toString();
+  document.getElementById("wallet").textContent = wallet;
+};
 
-    document.getElementById("wallet").textContent =
-      walletAddress.slice(0, 6) + "..." + walletAddress.slice(-4);
-
-    document.getElementById("status").textContent =
-      "Wallet Connected";
-  } catch (err) {
-    alert("Wallet connection canceled");
-  }
-}
-
-function toggleMining() {
-  if (!walletAddress) {
-    alert("Connect wallet first");
-    return;
-  }
-
+mineBtn.onclick = () => {
   if (!mining) {
     mining = true;
-    mineBtn.textContent = "Stop Mining";
-
-    miningInterval = setInterval(() => {
-      minedBalance += 0.001;
-      updateDisplay();
+    setInterval(() => {
+      mined += 0.001;
+      document.getElementById("balance").textContent =
+        mined.toFixed(6) + " VLX";
     }, 1000);
-
-    document.getElementById("status").textContent =
-      "Mining Active";
-  } else {
-    clearInterval(miningInterval);
-    mining = false;
-    mineBtn.textContent = "Start Mining";
-
-    document.getElementById("status").textContent =
-      "Mining Stopped";
   }
-}
+};
 
-async function claimRewards() {
-  if (minedBalance <= 0) {
-    alert("No VLX to claim");
-    return;
-  }
-
+claimBtn.onclick = async () => {
   try {
-    document.getElementById("status").textContent =
-      "Processing Claim";
-
-    const response = await fetch(
+    const res = await fetch(
       "https://vjalivzqoiqnuadbkrce.supabase.co/functions/v1/claim-vlx",
       {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          wallet: walletAddress,
-          amount: minedBalance
-        })
+        method: "POST"
       }
     );
 
-    const result = await response.json();
+    const data = await res.json();
 
-    if (result.signature) {
-      claimedBalance += minedBalance;
-      minedBalance = 0;
-
-      updateDisplay();
-
-      document.getElementById("status").textContent =
-        "Claim Successful";
-
-      alert("VLX Sent\nTX: " + result.signature);
-    } else {
-      alert("Claim canceled");
-    }
+    alert("SUCCESS: " + data.signature);
 
   } catch (err) {
-    alert("Claim failed");
+    alert("FAILED");
     console.error(err);
   }
-}
-
-function updateDisplay() {
-  document.getElementById("balance").textContent =
-    minedBalance.toFixed(6) + " VLX";
-
-  document.getElementById("claimed").textContent =
-    claimedBalance.toFixed(6) + " VLX";
-}
+};

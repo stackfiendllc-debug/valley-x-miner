@@ -49,7 +49,7 @@ async function claimVLX() {
 
   try {
     const response = await fetch(
-      "https://YOUR-SUPABASE-FUNCTION.supabase.co/functions/v1/claim",
+      "https://vjalivzqoiqnuadbkrce.supabase.co/functions/v1/claim-vlx",
       {
         method: "POST",
         headers: {

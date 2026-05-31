@@ -11,7 +11,7 @@ const SUPABASE_URL =
 const SUPABASE_ANON =
 "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZqYWxpdnpxb2lxbnVhZGJrcmNlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAxMTI5NDMsImV4cCI6MjA5NTY4ODk0M30.nIh-u0GHpQkBPQWLN7UKETagAJOoaIbVml3TCtEJpoE";
 
-let reward = parseFloat(localStorage.getItem("vlxReward")) || 0;
+let reward = 0;
 
 const rewardDisplay = document.getElementById("rewardDisplay");
 const walletAddress = document.getElementById("walletAddress");
@@ -20,7 +20,25 @@ const status = document.getElementById("status");
 const logo = document.getElementById("logo");
 const connectBtn = document.getElementById("connectBtn");
 
-rewardDisplay.innerText = reward.toFixed(6);
+function getRewardKey() {
+    return wallet ? `vlxReward_${wallet}` : null;
+}
+
+function loadReward() {
+    const key = getRewardKey();
+    reward = key
+        ? parseFloat(localStorage.getItem(key)) || 0
+        : 0;
+
+    rewardDisplay.innerText = reward.toFixed(6);
+}
+
+function saveReward() {
+    const key = getRewardKey();
+    if (key) {
+        localStorage.setItem(key, reward);
+    }
+}
 
 async function connectWallet() {
     if (!window.solana) {
@@ -43,14 +61,12 @@ async function connectWallet() {
         connectBtn.innerText = "Connected";
         status.innerText = "READY";
 
+        loadReward();
+
     } catch (err) {
         console.error(err);
         alert("Wallet connection failed");
     }
-}
-
-function saveReward() {
-    localStorage.setItem("vlxReward", reward);
 }
 
 function startMining() {
@@ -122,13 +138,13 @@ async function claimVLX() {
         const data = await response.json();
 
         if (response.ok) {
-            alert("VLX successfully claimed");
-
             reward = 0;
             saveReward();
 
             rewardDisplay.innerText = "0.000000";
             status.innerText = "READY";
+
+            alert("VLX successfully claimed");
 
         } else {
             alert(data.error || "Claim failed");
@@ -143,8 +159,6 @@ async function claimVLX() {
 }
 
 window.onload = async () => {
-    rewardDisplay.innerText = reward.toFixed(6);
-
     if (window.solana) {
         try {
             const response = await window.solana.connect({
@@ -159,8 +173,11 @@ window.onload = async () => {
             connectBtn.innerText = "Connected";
             status.innerText = "READY";
 
+            loadReward();
+
         } catch {
             status.innerText = "IDLE";
+            rewardDisplay.innerText = "0.000000";
         }
     }
 };

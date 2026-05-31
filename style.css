@@ -1,0 +1,76 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #050505;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    text-align: center;
+}
+
+.app {
+    width: 95%;
+    max-width: 420px;
+    padding: 20px;
+}
+
+#logo {
+    width: 160px;
+    margin-bottom: 20px;
+    animation: glow 3s infinite alternate;
+}
+
+@keyframes glow {
+    from { filter: drop-shadow(0 0 10px #888); }
+    to { filter: drop-shadow(0 0 25px #fff); }
+}
+
+h1 {
+    margin: 0;
+    font-size: 28px;
+}
+
+.subtitle {
+    color: #aaa;
+    margin-bottom: 20px;
+}
+
+.wallet-box,
+.card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid #444;
+    border-radius: 14px;
+    padding: 15px;
+    margin-bottom: 12px;
+}
+
+.card h2 {
+    margin: 5px 0 0;
+}
+
+button {
+    width: 100%;
+    margin: 8px 0;
+    padding: 14px;
+    border: none;
+    border-radius: 14px;
+    background: linear-gradient(145deg,#999,#444);
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover {
+    opacity: .9;
+}
+
+.mining {
+    animation: spin 8s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}

@@ -4,32 +4,42 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Valley X Miner</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
-<div class="container">
-  <img src="logo.jpeg" id="logo" class="logo" />
+  <div class="container">
 
-  <h1>VALLEY X</h1>
+    <img id="logo" src="logo.png" alt="VLX Logo" class="logo">
 
-  <div class="wallet-box">
-    <button onclick="connectWallet()">Connect Phantom</button>
-    <p id="wallet-status">Wallet not connected</p>
+    <h1>Valley X Miner</h1>
+    <p class="subtitle">Mine and Claim VLX</p>
+
+    <div class="wallet-card">
+      <h3>Wallet</h3>
+      <p id="walletText">Not Connected</p>
+    </div>
+
+    <div class="balance-card">
+      <h2>Available VLX</h2>
+      <p id="balanceText">0.000000000 VLX</p>
+    </div>
+
+    <div class="button-group">
+      <button id="connectBtn">Connect Phantom</button>
+      <button id="mineBtn">Start Mining</button>
+      <button id="claimBtn">Claim VLX</button>
+    </div>
+
+    <div class="info-box">
+      <p>Mining runs every 30 seconds</p>
+      <p>Minimum claim: 0.01 VLX</p>
+    </div>
+
   </div>
 
-  <div class="stats">
-    <p>Hash Rate: <span id="hashRate">0</span> H/s</p>
-    <p>Mined VLX: <span id="vlxBalance">0.0000</span></p>
-  </div>
+  <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js"></script>
+  <script src="app.js"></script>
 
-  <div class="controls">
-    <button onclick="startMining()">Start Mining</button>
-    <button onclick="stopMining()">Stop Mining</button>
-    <button onclick="claimVLX()">Claim VLX</button>
-  </div>
-</div>
-
-<script src="app.js"></script>
 </body>
 </html>

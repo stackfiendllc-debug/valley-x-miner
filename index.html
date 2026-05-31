@@ -9,30 +9,31 @@
 <body>
 
 <header>
-<img src="logo.jpeg" class="logo">
-<h1>VALLEY X MINER</h1>
+    <img src="./logo.png" class="logo" id="logo">
+    <h1>VALLEY X MINER</h1>
+    <p>Continuous Decentralized Mining</p>
 </header>
 
 <div class="container">
 
-<div class="card">
-Wallet: <span id="walletAddress">Not Connected</span>
-</div>
+    <div class="card">
+        Wallet: <span id="walletAddress">Not Connected</span>
+    </div>
 
-<div class="card">
-Hash Rate: <span id="hashRate">0 H/s</span>
-</div>
+    <div class="card">
+        Hash Rate: <span id="hashRate">0 H/s</span>
+    </div>
 
-<div class="card">
-VLX Earned: <span id="rewardDisplay">0.000000 VLX</span>
-</div>
+    <div class="card reward-card">
+        VLX Earned: <span id="rewardDisplay">0.000000 VLX</span>
+    </div>
 
-<div class="buttons">
-<button onclick="connectWallet()">Connect Phantom</button>
-<button onclick="startMining()">Start Mining</button>
-<button onclick="stopMining()">Stop Mining</button>
-<button onclick="claimVLX()">Claim VLX</button>
-</div>
+    <div class="buttons">
+        <button onclick="connectWallet()">Connect Phantom</button>
+        <button onclick="startMining()">Start Mining</button>
+        <button onclick="stopMining()">Stop Mining</button>
+        <button onclick="claimVLX()">Claim VLX</button>
+    </div>
 
 </div>
 

@@ -1,35 +1,28 @@
 let walletAddress = null;
 let minedBalance = 0;
 let claimedBalance = 0;
+let miningInterval = null;
 let mining = false;
-let miningInterval;
 
 const connectBtn = document.getElementById("connectBtn");
 const mineBtn = document.getElementById("mineBtn");
+const claimBtn = document.getElementById("claimBtn");
 
 connectBtn.addEventListener("click", connectWallet);
 mineBtn.addEventListener("click", toggleMining);
+claimBtn.addEventListener("click", claimRewards);
 
 async function connectWallet() {
   try {
-    const provider = window.solana;
-
-    if (!provider || !provider.isPhantom) {
-      alert("Install Phantom Wallet");
-      return;
-    }
-
-    const response = await provider.connect();
-    walletAddress = response.publicKey.toString();
+    const resp = await window.solana.connect();
+    walletAddress = resp.publicKey.toString();
 
     document.getElementById("wallet").textContent =
       walletAddress.slice(0, 6) + "..." + walletAddress.slice(-4);
 
     document.getElementById("status").textContent =
       "Wallet Connected";
-
   } catch (err) {
-    console.error(err);
     alert("Wallet connection canceled");
   }
 }
@@ -41,41 +34,27 @@ function toggleMining() {
   }
 
   if (!mining) {
-    startMining();
+    mining = true;
+    mineBtn.textContent = "Stop Mining";
+
+    miningInterval = setInterval(() => {
+      minedBalance += 0.001;
+      updateDisplay();
+    }, 1000);
+
+    document.getElementById("status").textContent =
+      "Mining Active";
   } else {
-    stopMining();
+    clearInterval(miningInterval);
+    mining = false;
+    mineBtn.textContent = "Start Mining";
+
+    document.getElementById("status").textContent =
+      "Mining Stopped";
   }
-}
-
-function startMining() {
-  mining = true;
-  mineBtn.textContent = "Stop Mining";
-
-  document.getElementById("status").textContent =
-    "Mining Active";
-
-  miningInterval = setInterval(() => {
-    minedBalance += 0.001;
-    updateDisplay();
-  }, 1000);
-}
-
-function stopMining() {
-  mining = false;
-  mineBtn.textContent = "Start Mining";
-
-  clearInterval(miningInterval);
-
-  document.getElementById("status").textContent =
-    "Mining Stopped";
 }
 
 async function claimRewards() {
-  if (!walletAddress) {
-    alert("Connect wallet first");
-    return;
-  }
-
   if (minedBalance <= 0) {
     alert("No VLX to claim");
     return;
@@ -83,7 +62,7 @@ async function claimRewards() {
 
   try {
     document.getElementById("status").textContent =
-      "Processing Claim...";
+      "Processing Claim";
 
     const response = await fetch(
       "https://vjalivzqoiqnuadbkrce.supabase.co/functions/v1/claim-vlx",
@@ -110,19 +89,14 @@ async function claimRewards() {
       document.getElementById("status").textContent =
         "Claim Successful";
 
-      alert("VLX Sent!\nTX: " + result.signature);
-
+      alert("VLX Sent\nTX: " + result.signature);
     } else {
-      throw new Error(result.error || "Claim canceled");
+      alert("Claim canceled");
     }
 
   } catch (err) {
+    alert("Claim failed");
     console.error(err);
-
-    document.getElementById("status").textContent =
-      "Claim Failed";
-
-    alert(err.message);
   }
 }
 

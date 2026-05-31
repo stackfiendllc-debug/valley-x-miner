@@ -3,73 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <title>Valley X Miner</title>
-
-  <link rel="stylesheet" href="style.css" />
-
-  <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js"></script>
+  <title>VLX Miner</title>
+  <script defer src="app.js"></script>
 </head>
-<body>
+<body style="background:black;color:red;text-align:center;font-family:Arial;padding:40px;">
 
-  <div class="container">
+  <h1>VALLEY X MINER</h1>
 
-    <img src="logo.png" class="logo" alt="Valley X Logo" />
+  <p>Wallet: <span id="wallet">Not Connected</span></p>
+  <p>Status: <span id="status">Idle</span></p>
 
-    <h1>VALLEY X MINER</h1>
+  <h2>Mined: <span id="balance">0.000000 VLX</span></h2>
+  <h2>Claimed: <span id="claimed">0.000000 VLX</span></h2>
 
-    <div class="button-group">
-      <button id="connectBtn">
-        Connect Phantom
-      </button>
-
-      <button id="mineBtn">
-        Start Mining
-      </button>
-
-      <button id="claimBtn" onclick="claimRewards()">
-        Claim VLX
-      </button>
-    </div>
-
-    <div class="card">
-      <strong>Wallet:</strong>
-      <span id="wallet">
-        Not Connected
-      </span>
-    </div>
-
-    <div class="card">
-      <strong>Mining Balance:</strong>
-      <span id="balance">
-        0.000000 VLX
-      </span>
-    </div>
-
-    <div class="card">
-      <strong>Total Claimed:</strong>
-      <span id="claimed">
-        0.000000 VLX
-      </span>
-    </div>
-
-    <div class="card">
-      <strong>Status:</strong>
-      <span id="status">
-        Ready
-      </span>
-    </div>
-
-    <div class="card">
-      <strong>Rate:</strong>
-      <span>
-        0.001 VLX / sec
-      </span>
-    </div>
-
-  </div>
-
-  <script src="app.js?v=8"></script>
+  <button id="connectBtn">Connect Wallet</button>
+  <button id="mineBtn">Start Mining</button>
+  <button id="claimBtn">Claim VLX</button>
 
 </body>
 </html>

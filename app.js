@@ -1,10 +1,12 @@
 const SUPABASE_URL = "https://vjalivzqoiqnuadbkrce.supabase.co";
 const CLAIM_URL = `${SUPABASE_URL}/functions/v1/claim-vlx`;
 
+const MIN_CLAIM = 0.01;
+const MINE_RATE = 0.00005;
+
 let wallet = localStorage.getItem("wallet") || null;
 let minedVLX = parseFloat(localStorage.getItem("vlxBalance")) || 0;
 let mining = false;
-let miningInterval = null;
 
 const connectBtn = document.getElementById("connectBtn");
 const mineBtn = document.getElementById("mineBtn");
@@ -15,31 +17,26 @@ const logo = document.getElementById("logo");
 
 function updateUI() {
     walletText.textContent = wallet
-        ? `${wallet.slice(0, 6)}...${wallet.slice(-4)}`
+        ? `${wallet.slice(0,6)}...${wallet.slice(-4)}`
         : "Not Connected";
 
     balanceText.textContent = `${minedVLX.toFixed(9)} VLX`;
 
     mineBtn.disabled = !wallet;
-    claimBtn.disabled = !wallet;
+    claimBtn.disabled = !wallet || minedVLX < MIN_CLAIM;
 }
 
 async function connectWallet() {
-    if (!window.solana || !window.solana.isPhantom) {
+    if (!window.solana?.isPhantom) {
         alert("Open inside Phantom browser");
         return;
     }
 
-    try {
-        const response = await window.solana.connect();
-        wallet = response.publicKey.toString();
+    const response = await window.solana.connect();
+    wallet = response.publicKey.toString();
 
-        localStorage.setItem("wallet", wallet);
-
-        updateUI();
-    } catch (error) {
-        console.error("Wallet connection failed:", error);
-    }
+    localStorage.setItem("wallet", wallet);
+    updateUI();
 }
 
 function startMining() {
@@ -51,23 +48,18 @@ function startMining() {
     if (mining) return;
 
     mining = true;
+    logo.classList.add("mining-glow");
 
-    if (logo) {
-        logo.classList.add("mining-glow");
-    }
-
-    miningInterval = setInterval(() => {
-        minedVLX += 0.00000005;
-
+    setInterval(() => {
+        minedVLX += MINE_RATE;
         localStorage.setItem("vlxBalance", minedVLX);
-
         updateUI();
     }, 30000);
 }
 
 async function claimVLX() {
-    if (!wallet) {
-        alert("Connect wallet first");
+    if (minedVLX < MIN_CLAIM) {
+        alert(`Minimum claim is ${MIN_CLAIM} VLX`);
         return;
     }
 
@@ -79,32 +71,26 @@ async function claimVLX() {
                 "Authorization": "Bearer public"
             },
             body: JSON.stringify({
-                wallet: wallet,
+                wallet,
                 amount: minedVLX
             })
         });
 
-        const data = await response.json();
+        if (!response.ok) throw new Error("Claim failed");
 
-        if (!response.ok) {
-            throw new Error(data.error || "Claim failed");
-        }
-
-        alert("VLX Claimed Successfully");
+        alert("Claim successful");
 
         minedVLX = 0;
         localStorage.setItem("vlxBalance", 0);
-
         updateUI();
 
-    } catch (error) {
-        console.error(error);
-        alert("Claim failed: " + error.message);
+    } catch (err) {
+        alert(err.message);
     }
 }
 
-connectBtn.addEventListener("click", connectWallet);
-mineBtn.addEventListener("click", startMining);
-claimBtn.addEventListener("click", claimVLX);
+connectBtn.onclick = connectWallet;
+mineBtn.onclick = startMining;
+claimBtn.onclick = claimVLX;
 
 updateUI();

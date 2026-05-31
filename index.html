@@ -1,101 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <title>Valley X Miner</title>
-
-  <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js"></script>
-  <script defer src="index.js?v=10"></script>
-
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #000;
-      color: white;
-      text-align: center;
-    }
-
-    .container {
-      max-width: 500px;
-      margin: auto;
-      padding: 20px;
-      border: 3px solid #ff8800;
-      border-radius: 30px;
-      margin-top: 20px;
-      box-shadow: 0 0 25px rgba(255,136,0,.4);
-      background: #050505;
-    }
-
-    .logo {
-      width: 220px;
-      margin-top: 15px;
-      filter: drop-shadow(0 0 25px orange);
-    }
-
-    h1 {
-      color: #ff9900;
-      font-size: 52px;
-      margin: 20px 0;
-      font-weight: 900;
-    }
-
-    button {
-      width: 100%;
-      padding: 22px;
-      margin: 12px 0;
-      border: none;
-      border-radius: 22px;
-      background: linear-gradient(90deg,#ff6600,#ffbb00);
-      color: #000;
-      font-size: 28px;
-      font-weight: bold;
-    }
-
-    .card {
-      background: #111;
-      border-radius: 22px;
-      padding: 22px;
-      margin: 18px 0;
-      font-size: 24px;
-    }
-
-    .highlight {
-      color: #ffbb00;
-      font-weight: bold;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valley X Miner</title>
+<link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-  <div class="container">
 
-    <img src="logo.jpeg" class="logo">
+<header>
+<img src="logo.jpeg" class="logo">
+<h1>VALLEY X MINER</h1>
+</header>
 
-    <h1>VALLEY X MINER</h1>
+<div class="container">
 
-    <button onclick="connectWallet()">Connect Phantom</button>
-    <button onclick="startMining()">Start Mining</button>
-    <button onclick="stopMining()">Stop Mining</button>
-    <button onclick="claimVLX()">Claim VLX</button>
+<div class="card">
+Wallet: <span id="walletAddress">Not Connected</span>
+</div>
 
-    <div class="card">
-      Wallet:
-      <span id="wallet" class="highlight">Not Connected</span>
-    </div>
+<div class="card">
+Hash Rate: <span id="hashRate">0 H/s</span>
+</div>
 
-    <div class="card">
-      Balance:
-      <span id="rewardDisplay" class="highlight">0.000000 VLX</span>
-    </div>
+<div class="card">
+VLX Earned: <span id="rewardDisplay">0.000000 VLX</span>
+</div>
 
-    <div class="card">
-      Status:
-      <span id="status" class="highlight">Ready</span>
-    </div>
+<div class="buttons">
+<button onclick="connectWallet()">Connect Phantom</button>
+<button onclick="startMining()">Start Mining</button>
+<button onclick="stopMining()">Stop Mining</button>
+<button onclick="claimVLX()">Claim VLX</button>
+</div>
 
-  </div>
+</div>
+
+<script src="index.js"></script>
 </body>
 </html>
